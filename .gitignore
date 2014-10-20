@@ -1,0 +1,13 @@
+.cproject
+.project
+.DS_Store
+src/bin
+src/obj
+src/.settings
+src/flash.sh
+4pi-firmware.xcodeproj
+DerivedData
+docs
+/src/.deps
+/workspace/.metadata
+/workspace/RemoteSystemsTempFiles
