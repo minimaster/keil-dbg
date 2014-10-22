@@ -439,15 +439,15 @@ static int gcode_process_command()
 					break;
 				
 				case 44:
-					//if (strcmp(get_str(' '),"IKnowWhatIAmDoing") == 0)
-					//{
+					if (strcmp(get_str(' '),"IKnowWhatIAmDoing") == 0)
+					{
 						FLASH_BootFromROM();
 						sendReply("bootloader enabled\n\r")
-					//}
-					//else
-					//{
-					//	FLASH_BootFromFLASH();
-					//}
+					}
+					else
+					{
+						FLASH_BootFromFLASH();
+					}
 					break;
 				case 82:
 					axis_relative_modes[3] = 0;
@@ -526,10 +526,7 @@ static int gcode_process_command()
 						g_pwm_value[2] = 255;
 					  }
 					  g_pwm_aktiv[2] = 1;
-					  sendReply("ok P:%u A:%u \r\n", g_pwm_value[2], g_pwm_aktiv[2]);
-					  //break;
-					  return NO_REPLY;
-
+					  break;
 				case 107: //M107 Fan 1 Off
 					  g_pwm_value[2] = 0;
 					  break;
@@ -1055,8 +1052,7 @@ static int gcode_process_command()
 					break;	  
 				}
 			  default:
-					sendReply("ok Unknown M%d\n\r",get_int('M'));
-					//sendReply("ok\r\n");
+					sendReply("Unknown M%d\n\r",get_int('M'));
 					return NO_REPLY;
 			}
 			break;
@@ -1096,9 +1092,7 @@ static void gcode_line_received()
 			
 			if (line != parserState.last_N+1 && (!has_code('M') || get_uint('M') != 110))
 			{
-				sendReply("Resend:%u incorrect line number\r\n", parserState.last_N+1);
-				//sendReply("rs %u line number incorrect\r\n",parserState.last_N+1);
-				sendReply("ok\r\n");
+				sendReply("rs %u line number incorrect\r\n",parserState.last_N+1);
 				return;
 			}
 			parserState.line_N = line;
@@ -1108,9 +1102,7 @@ static void gcode_line_received()
 			{
 				if (get_uint('*') != calculate_checksum(parserState.commandBuffer))
 				{
-					sendReply("Resend:%u incorrect checksum\r\n",parserState.last_N+1);
-					//sendReply("rs %u incorrect checksum\r\n",parserState.last_N+1);
-					sendReply("ok\r\n");
+					sendReply("rs %u incorrect checksum\r\n",parserState.last_N+1);
 					return;
 				}
 				*ptr = 0;
@@ -1118,7 +1110,6 @@ static void gcode_line_received()
 			else
 			{
 				sendReply("No checksum with line number\n\r");
-				//sendReply("ok\r\n");
 				return;
 			}
 			parserState.last_N = parserState.line_N;			
@@ -1126,7 +1117,6 @@ static void gcode_line_received()
 		else if (strchr(parserState.commandBuffer,'*') != NULL)
 		{
 			sendReply("No line number with checksum\n\r");
-			//sendReply("ok\r\n");
 			return;
 		}
 
@@ -1167,19 +1157,15 @@ void gcode_update()
 			case ';':
 			case '(':
 				parserState.comment_mode = true;
-				printf("gline: comment mode\r\n");
 				break;
 			case '\n':
 			case '\r':
-				printf("gline: { "); printf(parserState.commandBuffer);
-
 				parserState.commandBuffer[parserState.commandLen] = 0;
 				parserState.parsePos = parserState.commandBuffer;
 				gcode_line_received();
 				parserState.comment_mode = false;
 				parserState.commandLen = 0;
-
-				printf(" }\r\n");
+				
 				break;
 			default:
 				if (parserState.commandLen >= BUFFER_SIZE)

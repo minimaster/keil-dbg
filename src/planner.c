@@ -625,36 +625,14 @@ void plan_init()
 {
 	unsigned char cnt_c;
   
-	printf("%s(): enter\r\n", __FUNCTION__);
-	
 	for(cnt_c=0; cnt_c < NUM_AXIS; cnt_c++) 
 	{
-		unsigned long left, result;
-		float right;
-
-		printf("%s(): iter %u\r\n", __func__, cnt_c);
-
-		left = pa.max_acceleration_units_per_sq_second[cnt_c];
-		printf("%s(): left = 0x%X\r\n", __func__, (unsigned)left);
-
-		right = pa.axis_steps_per_unit[cnt_c];
-		printf("%s(): right = 0x%X\r\n", __func__, (unsigned)right);
-
-		result = 0.0f; //left * right;
-		printf("%s(): result = 0x%X\r\n", __func__, (unsigned)result);
-
-		axis_steps_per_sqr_second[cnt_c] =  result;
-		printf("%s(): end of iteration\r\n", __func__);
+		axis_steps_per_sqr_second[cnt_c] = pa.max_acceleration_units_per_sq_second[cnt_c] * pa.axis_steps_per_unit[cnt_c];
 	}
-	
-	printf("%s(): After for loop\r\n", __FUNCTION__);
 	
 	block_buffer_head = 0;
 	block_buffer_tail = 0;
-	
-	printf("%s(): Before memset\r\n", __FUNCTION__);
 	memset(position, 0, sizeof(position)); // clear position
-	printf("%s(): After memset\r\n", __FUNCTION__);
 	previous_speed[0] = 0.0;
 	previous_speed[1] = 0.0;
 	previous_speed[2] = 0.0;

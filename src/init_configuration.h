@@ -37,10 +37,10 @@
 //// Calibration variables
 //-----------------------------------------------------------------------
 // X, Y, Z, E steps per unit
-#define _AXIS_STEP_PER_UNIT {40, 40, 1600/0.8, 350}
+#define _AXIS_STEP_PER_UNIT {160, 160, 6400/0.8, 1095 }
 
 #define _AXIS_CURRENT {192, 192, 245, 192, 192}
-#define _AXIS_USTEP {2, 2, 2, 2, 2}
+#define _AXIS_USTEP {3, 3, 3, 3, 3}
 
 //-----------------------------------------------------------------------
 //// Endstop Settings

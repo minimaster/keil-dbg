@@ -94,17 +94,16 @@ INCLUDES += -I$(EXT_LIBS)
 INCLUDES += -I$(EXT_LIBS)/fat
 
 ifeq ($(CHIP_CORE), cortexm3)
-TARGET_OPTS =  -mlittle-endian -march=armv7-m -mcpu=cortex-m3 -mthumb -mtune=cortex-m3 -mthumb-interwork
-$(info TARGET_OPTS= $(TARGET_OPTS))
+TARGET_OPTS = -mcpu=cortex-m3 -mthumb
 else
 TARGET_OPTS = 
 endif
 
 CFLAGS += $(TARGET_OPTS)
-CFLAGS += -Wall -ffunction-sections
+CFLAGS += -Wall -mlong-calls -ffunction-sections
 CFLAGS += -g $(OPTIMIZATION) $(INCLUDES) -D$(CHIP) -DTRACE_LEVEL=$(TRACE_LEVEL)
 ASFLAGS = $(TARGET_OPTS) -Wall -g $(OPTIMIZATION) $(INCLUDES) -D$(CHIP) -D__ASSEMBLY__
-LDFLAGS = -g $(OPTIMIZATION) -nostartfiles $(TARGET_OPTS) -Wl,--gc-sections -Wl,-Map=$(OUTPUT).map
+LDFLAGS = -g $(OPTIMIZATION) -nostartfiles $(TARGET_OPTS) -Wl,--gc-sections
 
 #-------------------------------------------------------------------------------
 #		Files
@@ -255,50 +254,29 @@ all: $(BIN) $(OBJ) $(MEMORIES)
 $(BIN) $(OBJ) $(DEPDIR):
 	mkdir $@
 
-# define RULES
-# C_OBJECTS_$(1) = $(C_SOURCES:%.c=$(OBJ)/$(1)_%.o)
-# ASM_OBJECTS_$(1) = $(ASM_SOURCES:%.S=$(OBJ)/$(1)_%.o)
+define RULES
+C_OBJECTS_$(1) = $(C_SOURCES:%.c=$(OBJ)/$(1)_%.o)
+ASM_OBJECTS_$(1) = $(ASM_SOURCES:%.S=$(OBJ)/$(1)_%.o)
 
-# $(1): $(OUTPUT)-$(1).bin
+$(1): $(OUTPUT)-$(1).bin
 
-# $(OUTPUT)-$(1).elf: $$(ASM_OBJECTS_$(1)) $$(C_OBJECTS_$(1)) | $(BIN)
-	# $(CC) $(LDFLAGS) -T"$(AT91LIB)/boards/$(BOARD)/$(CHIP)/$(1).lds" -o $$@ $$^ -lm
-	# $(SIZE) $$^ $$@
+$(OUTPUT)-$(1).elf: $$(ASM_OBJECTS_$(1)) $$(C_OBJECTS_$(1)) | $(BIN)
+	$(CC) $(LDFLAGS) -T"$(AT91LIB)/boards/$(BOARD)/$(CHIP)/$(1).lds" -o $$@ $$^ -lm
+	$(SIZE) $$^ $$@
 
-# $$(C_OBJECTS_$(1)): $(OBJ)/$(1)_%.o: %.c Makefile | $(OBJ) $(DEPDIR)
-	# $(CC) $(CFLAGS) -D$(1) -MD -MP -MF .deps/$$(notdir $$(@:.o=.d)) -c -o $$@ $$<
+$$(C_OBJECTS_$(1)): $(OBJ)/$(1)_%.o: %.c Makefile | $(OBJ) $(DEPDIR)
+	$(CC) $(CFLAGS) -D$(1) -MD -MP -MF .deps/$$(notdir $$(@:.o=.d)) -c -o $$@ $$<
 
-# $$(ASM_OBJECTS_$(1)): $(OBJ)/$(1)_%.o: %.S Makefile | $(OBJ)
-	# $(CC) $(ASFLAGS) -D$(1) -c -o $$@ $$<
+$$(ASM_OBJECTS_$(1)): $(OBJ)/$(1)_%.o: %.S Makefile | $(OBJ)
+	$(CC) $(ASFLAGS) -D$(1) -c -o $$@ $$<
 
-# debug_$(1): $(1)
-	# perl ../resources/gdb/debug.pl $(OUTPUT)-$(1).elf
+debug_$(1): $(1)
+	perl ../resources/gdb/debug.pl $(OUTPUT)-$(1).elf
 
-# -include $(C_SOURCES:%.c=$(DEPDIR)/$(1)_%.d)
-# endef
+-include $(C_SOURCES:%.c=$(DEPDIR)/$(1)_%.d)
+endef
 
-#$(foreach MEMORY, $(MEMORIES), $(eval $(call RULES,$(MEMORY))))
-
-C_OBJECTS_flash = $(C_SOURCES:%.c=$(OBJ)/flash_%.o)
-ASM_OBJECTS_flash = $(ASM_SOURCES:%.S=$(OBJ)/flash_%.o)
-
-flash: $(OUTPUT)-flash.bin
-
-$(OUTPUT)-flash.elf: $(ASM_OBJECTS_flash) $(C_OBJECTS_flash) | $(BIN)
-	$(CC) $(LDFLAGS) -T"$(AT91LIB)/boards/$(BOARD)/$(CHIP)/flash.lds" -o $@ $^ -lm
-	$(SIZE) $^ $@
-
-$(C_OBJECTS_flash): $(OBJ)/flash_%.o: %.c Makefile | $(OBJ) $(DEPDIR)
-	$(CC) $(CFLAGS) -Dflash -MD -MP -MF .deps/$(notdir $(@:.o=.d)) -c -o $@ $<
-
-$(ASM_OBJECTS_flash): $(OBJ)/flash_%.o: %.S Makefile | $(OBJ)
-	$(CC) $(ASFLAGS) -Dflash -c -o $@ $<
-
-debug_flash: flash
-	perl ../resources/gdb/debug.pl $(OUTPUT)-flash.elf
-
--include $(C_SOURCES:%.c=$(DEPDIR)/flash_%.d)
-
+$(foreach MEMORY, $(MEMORIES), $(eval $(call RULES,$(MEMORY))))
 
 clean:
 	-rm -f $(OBJ)/*.o $(BIN)/*.bin $(BIN)/*.elf $(DEPDIR)/*.d
