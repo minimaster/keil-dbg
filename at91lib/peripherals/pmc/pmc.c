@@ -104,7 +104,7 @@ void PMC_EnablePeripheral(unsigned int id)
     if ((AT91C_BASE_PMC->PMC_PCSR & (1 << id)) == (1 << id)) {
 
         TRACE_INFO("PMC_EnablePeripheral: clock of peripheral"
-                   " %u is already enabled\n\r",
+                   " %u is already enabled\r\n",
                    id);
     }
     else {
@@ -126,7 +126,7 @@ void PMC_DisablePeripheral(unsigned int id)
     if ((AT91C_BASE_PMC->PMC_PCSR & (1 << id)) != (1 << id)) {
 
         TRACE_INFO("PMC_DisablePeripheral: clock of peripheral"
-                   " %u is not enabled\n\r",
+                   " %u is not enabled\r\n",
                    id);
     }
     else {
@@ -143,7 +143,7 @@ void PMC_EnableAllPeripherals(void)
 {
     AT91C_BASE_PMC->PMC_PCER = MASK_STATUS;
     while( (AT91C_BASE_PMC->PMC_PCSR & MASK_STATUS) != MASK_STATUS);
-    TRACE_INFO("Enable all periph clocks\n\r"); 
+    TRACE_INFO("Enable all periph clocks\r\n"); 
 }
 
 //------------------------------------------------------------------------------
@@ -154,7 +154,7 @@ void PMC_DisableAllPeripherals(void)
 {
     AT91C_BASE_PMC->PMC_PCDR = MASK_STATUS;
     while((AT91C_BASE_PMC->PMC_PCSR & MASK_STATUS) != 0);
-    TRACE_INFO("Disable all periph clocks\n\r");
+    TRACE_INFO("Disable all periph clocks\r\n");
 }
 
 //-----------------------------------------------------------------------------

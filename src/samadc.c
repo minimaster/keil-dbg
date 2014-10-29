@@ -167,9 +167,9 @@ void ADCC0_IrqHandler(void)
 
 void initadc(int autos)
 {
-   // printf("-- Basic ADC Project %s --\n\r", SOFTPACK_VERSION);
-  //  printf("-- %s\n\r", BOARD_NAME);
-  //  printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
+   // printf("-- Basic ADC Project %s --\r\n", SOFTPACK_VERSION);
+  //  printf("-- %s\r\n", BOARD_NAME);
+  //  printf("-- Compiled: %s %s --\r\n", __DATE__, __TIME__);
   if(autos)
     autosample=1;
 #ifdef PINS_ADC

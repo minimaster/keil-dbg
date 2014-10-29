@@ -102,7 +102,7 @@ static void PioInterruptHandler(unsigned int id, AT91S_PIO *pPio)
     // Check pending events
     if (status != 0) {
 
-        TRACE_DEBUG("PIO interrupt on PIO controller #%d\n\r", id);
+        TRACE_DEBUG("PIO interrupt on PIO controller #%d\r\n", id);
 
         // Find triggering source
         i = 0;
@@ -117,7 +117,7 @@ static void PioInterruptHandler(unsigned int id, AT91S_PIO *pPio)
                 // Source has PIOs whose statuses have changed
                 if ((status & pSources[i].pPin->mask) != 0) {
 
-                    TRACE_DEBUG("Interrupt source #%d triggered\n\r", i);
+                    TRACE_DEBUG("Interrupt source #%d triggered\r\n", i);
 
                     pSources[i].handler(pSources[i].pPin);
                     status &= ~(pSources[i].pPin->mask);
@@ -221,7 +221,7 @@ void PIO_IT_InterruptHandler(void)
 //------------------------------------------------------------------------------
 void PIO_InitializeInterrupts(unsigned int priority)
 {
-    TRACE_DEBUG("PIO_Initialize()\n\r");
+    TRACE_DEBUG("PIO_Initialize()\r\n");
 
 //    SANITY_CHECK((priority & ~AT91C_AIC_PRIOR) == 0);
 
@@ -230,7 +230,7 @@ void PIO_InitializeInterrupts(unsigned int priority)
 
 #ifdef AT91C_ID_PIOA
     // Configure PIO interrupt sources
-    TRACE_DEBUG("PIO_Initialize: Configuring PIOA\n\r");
+    TRACE_DEBUG("PIO_Initialize: Configuring PIOA\r\n");
     AT91C_BASE_PMC->PMC_PCER = 1 << AT91C_ID_PIOA;
     AT91C_BASE_PIOA->PIO_ISR;
     AT91C_BASE_PIOA->PIO_IDR = 0xFFFFFFFF;
@@ -239,7 +239,7 @@ void PIO_InitializeInterrupts(unsigned int priority)
 #endif
 
 #ifdef AT91C_ID_PIOB
-    TRACE_DEBUG("PIO_Initialize: Configuring PIOB\n\r");
+    TRACE_DEBUG("PIO_Initialize: Configuring PIOB\r\n");
     AT91C_BASE_PMC->PMC_PCER = 1 << AT91C_ID_PIOB;
     AT91C_BASE_PIOB->PIO_ISR;
     AT91C_BASE_PIOB->PIO_IDR = 0xFFFFFFFF;
@@ -248,7 +248,7 @@ void PIO_InitializeInterrupts(unsigned int priority)
 #endif
 
 #ifdef AT91C_ID_PIOC
-    TRACE_DEBUG("PIO_Initialize: Configuring PIOC\n\r");
+    TRACE_DEBUG("PIO_Initialize: Configuring PIOC\r\n");
     AT91C_BASE_PMC->PMC_PCER = 1 << AT91C_ID_PIOC;
     AT91C_BASE_PIOC->PIO_ISR;
     AT91C_BASE_PIOC->PIO_IDR = 0xFFFFFFFF;
@@ -257,7 +257,7 @@ void PIO_InitializeInterrupts(unsigned int priority)
 #endif
 
 #ifdef AT91C_ID_PIOD
-    TRACE_DEBUG("PIO_Initialize: Configuring PIOD\n\r");
+    TRACE_DEBUG("PIO_Initialize: Configuring PIOD\r\n");
     AT91C_BASE_PMC->PMC_PCER = 1 << AT91C_ID_PIOD;
     AT91C_BASE_PIOC->PIO_ISR;
     AT91C_BASE_PIOC->PIO_IDR = 0xFFFFFFFF;
@@ -266,7 +266,7 @@ void PIO_InitializeInterrupts(unsigned int priority)
 #endif
 
 #ifdef AT91C_ID_PIOE
-    TRACE_DEBUG("PIO_Initialize: Configuring PIOE\n\r");
+    TRACE_DEBUG("PIO_Initialize: Configuring PIOE\r\n");
     AT91C_BASE_PMC->PMC_PCER = 1 << AT91C_ID_PIOE;
     AT91C_BASE_PIOC->PIO_ISR;
     AT91C_BASE_PIOC->PIO_IDR = 0xFFFFFFFF;
@@ -281,7 +281,7 @@ void PIO_InitializeInterrupts(unsigned int priority)
      && !defined(AT91C_ID_PIOC) \
      && !defined(AT91C_ID_PIOD)
 
-        TRACE_DEBUG("PIO_Initialize: Configuring PIOABCD\n\r");
+        TRACE_DEBUG("PIO_Initialize: Configuring PIOABCD\r\n");
         AT91C_BASE_PMC->PMC_PCER = 1 << AT91C_ID_PIOABCD;
         AT91C_BASE_PIOA->PIO_ISR;
         AT91C_BASE_PIOA->PIO_IDR = 0xFFFFFFFF;
@@ -298,7 +298,7 @@ void PIO_InitializeInterrupts(unsigned int priority)
      && !defined(AT91C_ID_PIOD) \
      && !defined(AT91C_ID_PIOE)
 
-        TRACE_DEBUG("PIO_Initialize: Configuring PIOABCDE\n\r");
+        TRACE_DEBUG("PIO_Initialize: Configuring PIOABCDE\r\n");
         AT91C_BASE_PMC->PMC_PCER = 1 << AT91C_ID_PIOABCDE;
         AT91C_BASE_PIOA->PIO_ISR;
         AT91C_BASE_PIOA->PIO_IDR = 0xFFFFFFFF;
@@ -313,7 +313,7 @@ void PIO_InitializeInterrupts(unsigned int priority)
      && !defined(AT91C_ID_PIOD) \
      && !defined(AT91C_ID_PIOE)
 
-        TRACE_DEBUG("PIO_Initialize: Configuring PIOC\n\r");
+        TRACE_DEBUG("PIO_Initialize: Configuring PIOC\r\n");
         AT91C_BASE_PMC->PMC_PCER = 1 << AT91C_ID_PIOCDE;
         AT91C_BASE_PIOC->PIO_ISR;
         AT91C_BASE_PIOC->PIO_IDR = 0xFFFFFFFF;
@@ -335,14 +335,14 @@ void PIO_ConfigureIt(const Pin *pPin, void (*handler)(const Pin *))
 {
     InterruptSource *pSource;
 
-    TRACE_DEBUG("PIO_ConfigureIt()\n\r");
+    TRACE_DEBUG("PIO_ConfigureIt()\r\n");
 
     SANITY_CHECK(pPin);
     ASSERT(numSources < MAX_INTERRUPT_SOURCES,
-           "-F- PIO_ConfigureIt: Increase MAX_INTERRUPT_SOURCES\n\r");
+           "-F- PIO_ConfigureIt: Increase MAX_INTERRUPT_SOURCES\r\n");
 
     // Define new source
-    TRACE_DEBUG("PIO_ConfigureIt: Defining new source #%d.\n\r",  numSources);
+    TRACE_DEBUG("PIO_ConfigureIt: Defining new source #%d.\r\n",  numSources);
 
     pSource = &(pSources[numSources]);
     pSource->pPin = pPin;
@@ -358,7 +358,7 @@ void PIO_ConfigureIt(const Pin *pPin, void (*handler)(const Pin *))
 //------------------------------------------------------------------------------
 void PIO_EnableIt(const Pin *pPin)
 {
-    TRACE_DEBUG("PIO_EnableIt()\n\r");
+    TRACE_DEBUG("PIO_EnableIt()\r\n");
 
     SANITY_CHECK(pPin);
 
@@ -373,7 +373,7 @@ void PIO_EnableIt(const Pin *pPin)
         }
         i++;
     }
-    ASSERT(found, "-F- PIO_EnableIt: Interrupt source has not been configured\n\r");
+    ASSERT(found, "-F- PIO_EnableIt: Interrupt source has not been configured\r\n");
 #endif
 
     pPin->pio->PIO_ISR;
@@ -414,7 +414,7 @@ void PIO_DisableIt(const Pin *pPin)
 {
     SANITY_CHECK(pPin);
 
-    TRACE_DEBUG("PIO_DisableIt()\n\r");
+    TRACE_DEBUG("PIO_DisableIt()\r\n");
 
     pPin->pio->PIO_IDR = pPin->mask;
 #if defined(AT91C_PIOA_AIMMR)

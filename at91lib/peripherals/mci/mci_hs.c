@@ -183,7 +183,7 @@ static unsigned int DMACH_MCI_P2M(unsigned int channel_index,
     }
     
     if(buffSize >= 0x10000){
-        TRACE_WARNING("SD DMA, size too big %d\n\r", buffSize);
+        TRACE_WARNING("SD DMA, size too big %d\r\n", buffSize);
         buffSize = 0xffff;
     }
     
@@ -287,7 +287,7 @@ static unsigned int DMACH_MCI_M2P(unsigned int channel_index,
     
     buffSize = trans_size;
     if(buffSize >= 0x10000){
-        TRACE_WARNING("SD DMA, size too big %d\n\r", buffSize);
+        TRACE_WARNING("SD DMA, size too big %d\r\n", buffSize);
         buffSize = 0xffff;
     }
     
@@ -496,7 +496,7 @@ void MCI_Init(
     WRITE_PMC(AT91C_BASE_PMC, PMC_PCDR, (1 << mciId));
 #else
     // Assume ROM code initialize the MCI already
-    TRACE_INFO("SD bootstrap not init mci!\n\r");
+    TRACE_INFO("SD bootstrap not init mci!\r\n");
 #endif
     
 }
@@ -863,9 +863,9 @@ void MCI_Handler(Mci *pMci)
     // Read the status register
     status0 = READ_MCI(pMciHw, MCI_SR);
     mask    = READ_MCI(pMciHw, MCI_IMR);
-    //TRACE_INFO("iST %x\n\r", status);
+    //TRACE_INFO("iST %x\r\n", status);
     status  = status0 & mask;
-    //TRACE_INFO("iSM %x\n\r", status);
+    //TRACE_INFO("iSM %x\r\n", status);
     
     // Check if an error has occured
     if ((status & STATUS_ERRORS) != 0) {
@@ -883,7 +883,7 @@ void MCI_Handler(Mci *pMci)
                      
                      pCommand->status = MCI_STATUS_ERROR;
                  }
-        // printf("iErr%x\n\r", (status & STATUS_ERRORS));
+        // printf("iErr%x\r\n", (status & STATUS_ERRORS));
     }
     mask &= ~STATUS_ERRORS;
     
@@ -997,7 +997,7 @@ unsigned char MCI_IsTxComplete(Mci *pMci)
     
     if (pCommand->status != MCI_STATUS_PENDING) {
         if (pCommand->status != 0) {
-            TRACE_DEBUG("MCI_IsTxComplete %d\n\r", pCommand->status);
+            TRACE_DEBUG("MCI_IsTxComplete %d\r\n", pCommand->status);
         }
         return 1;
     }
@@ -1027,7 +1027,7 @@ unsigned int MCI_FifoTransfer(Mci *pMci, MciCmd *pCommand)
     return 0;
 #endif
     
-    TRACE_DEBUG("MCIFifo:%d,%d\n\r", pCommand->isRead, pCommand->nbBlock);
+    TRACE_DEBUG("MCIFifo:%d,%d\r\n", pCommand->isRead, pCommand->nbBlock);
     
     if (pCommand->nbBlock == 0 || pCommand->blockSize == 0)
     return 0;
@@ -1050,7 +1050,7 @@ unsigned int MCI_FifoTransfer(Mci *pMci, MciCmd *pCommand)
                 break;
 #if 1
                 if (status & STATUS_ERRORS_DATA) {
-                    TRACE_ERROR("MCI_FifoTransfer.R: 0x%x\n\r", status);
+                    TRACE_ERROR("MCI_FifoTransfer.R: 0x%x\r\n", status);
                     return status;
                 }
 #endif
@@ -1069,7 +1069,7 @@ unsigned int MCI_FifoTransfer(Mci *pMci, MciCmd *pCommand)
                 break;
 #if 0
                 if (status & STATUS_ERRORS_DATA) {
-                    TRACE_ERROR("MCI_FifoTransfer.W: 0x%x\n\r", status);
+                    TRACE_ERROR("MCI_FifoTransfer.W: 0x%x\r\n", status);
                     return status;
                 }
 #endif
@@ -1080,9 +1080,9 @@ unsigned int MCI_FifoTransfer(Mci *pMci, MciCmd *pCommand)
     }
     
     status = READ_MCI(pMciHw, MCI_SR);
-    TRACE_DEBUG("MCI_FifoTransfer : All status %x\n\r", status);
+    TRACE_DEBUG("MCI_FifoTransfer : All status %x\r\n", status);
     status &= READ_MCI(pMciHw, MCI_IMR);
-    TRACE_DEBUG("MCI_FifoTransfer : Masked status %x\n\r", status);
+    TRACE_DEBUG("MCI_FifoTransfer : Masked status %x\r\n", status);
     
 #if 0
     { unsigned int old = status;
@@ -1093,14 +1093,14 @@ unsigned int MCI_FifoTransfer(Mci *pMci, MciCmd *pCommand)
                 TRACE_DEBUG_WP(" -> %x", status);
             }
         }
-        TRACE_DEBUG_WP("\n\r");
-        TRACE_DEBUG(" DPIT 0 stat %x\n\r", status);
+        TRACE_DEBUG_WP("\r\n");
+        TRACE_DEBUG(" DPIT 0 stat %x\r\n", status);
         while((status & (AT91C_MCI_FIFOEMPTY
                          | AT91C_MCI_BLKE
                          | AT91C_MCI_XFRDONE)) == 0) {
             status = READ_MCI(pMciHw, MCI_SR);
         }
-        TRACE_DEBUG(" FIFO EMPTY stat %x\n\r", status);
+        TRACE_DEBUG(" FIFO EMPTY stat %x\r\n", status);
     }
 #endif
     

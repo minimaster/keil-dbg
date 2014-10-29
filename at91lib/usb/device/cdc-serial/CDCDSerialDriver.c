@@ -162,7 +162,7 @@ void CDCDSerialDriver_Initialize(){
 
 void CDCDSerialDriver_Initializeb(int baudrate)
 {
-    TRACE_INFO("CDCDSerialDriver_Initialize\n\r");
+    TRACE_INFO("CDCDSerialDriver_Initialize\r\n");
     
     // Initialize Abstract Control Model attributes
     CDCLineCoding_Initialize(&(cdcdSerialDriver.lineCoding),
@@ -280,7 +280,7 @@ unsigned short CDCDSerialDriver_GetSerialState()
 void CDCDSerialDriver_SetSerialState(unsigned short serialState)
 {
     ASSERT((serialState & 0xFF80) == 0,
-           "CDCDSerialDriver_SetSerialState: Bits D7-D15 are reserved\n\r");
+           "CDCDSerialDriver_SetSerialState: Bits D7-D15 are reserved\r\n");
 
     // If new state is different from previous one, send a notification to the
     // host

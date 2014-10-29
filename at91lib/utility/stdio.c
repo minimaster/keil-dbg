@@ -57,7 +57,7 @@
 //------------------------------------------------------------------------------
 
 // Maximum string size allowed (in bytes).
-#define MAX_STRING_SIZE         100
+#define MAX_STRING_SIZE         200
 
 //------------------------------------------------------------------------------
 //         Global Variables
@@ -458,7 +458,7 @@ signed int vsprintf(char *pString, const char *pFormat, va_list ap)
 signed int vfprintf(FILE *pStream, const char *pFormat, va_list ap)
 {
     char pStr[MAX_STRING_SIZE];
-    static const char pError[] = "stdio.c: increase MAX_STRING_SIZE\n\r";
+    static const char pError[] = "stdio.c: increase MAX_STRING_SIZE\r\n";
 
     // Write formatted string in buffer
     if (vsprintf(pStr, pFormat, ap) >= MAX_STRING_SIZE) {

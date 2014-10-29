@@ -265,7 +265,7 @@ static void UDP_EndOfTransfer(unsigned char bEndpoint, char bStatus)
                  pTransfer->remaining + pTransfer->buffered);
         }
         else {
-            TRACE_DEBUG_WP("No callBack\n\r");
+            TRACE_DEBUG_WP("No callBack\r\n");
         }
     }
 }
@@ -766,7 +766,7 @@ void UDPD_IrqHandler(void)
                 
                 if (status != 0) {
                 
-                    TRACE_INFO_WP("\n\r  - ");
+                    TRACE_INFO_WP("\r\n  - ");
                 }
             }
             eptnum++;
@@ -774,7 +774,7 @@ void UDPD_IrqHandler(void)
     }
 
     // Toggle LED back to its previous state
-    TRACE_INFO_WP("\n\r");
+    TRACE_INFO_WP("\r\n");
     if (deviceState >= USBD_STATE_POWERED) {
 
         LED_Clear(USBD_LEDUSB);
@@ -1043,7 +1043,7 @@ unsigned char USBD_Stall(unsigned char bEndpoint)
     // Check that endpoint is in Idle state
     if (pEndpoint->state != UDP_ENDPOINT_IDLE) {
 
-        TRACE_WARNING("UDP_Stall: Endpoint%d locked\n\r", bEndpoint);
+        TRACE_WARNING("UDP_Stall: Endpoint%d locked\r\n", bEndpoint);
         return USBD_STATUS_LOCKED;
     }
 
@@ -1190,7 +1190,7 @@ void USBD_Disconnect(void)
 //------------------------------------------------------------------------------
 void USBD_Init(void)
 {
-    TRACE_INFO_WP("USBD_Init\n\r");
+    TRACE_INFO_WP("USBD_Init\r\n");
 
     // Reset endpoint structures
     UDP_ResetEndpoints();

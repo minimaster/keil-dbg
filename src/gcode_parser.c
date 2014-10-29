@@ -313,6 +313,7 @@ static int gcode_process_command()
 				case 1:
 					get_coordinates();
 					prepare_move();
+					printf("done G1\r\n");
 					break;
 				case 2:
 					get_arc_coordinates();
@@ -390,7 +391,7 @@ static int gcode_process_command()
 					break;
 				}
 				default:
-					sendReply("Unknown G%d\n\r",get_int('G'));
+					sendReply("Unknown G%d\r\n",get_int('G'));
 					return NO_REPLY;
 			}
 			break;
@@ -406,8 +407,8 @@ static int gcode_process_command()
 			{
 				case 20: //list sd files
 					sdcard_listfiles();
-//					break;
-					return NO_REPLY;
+					break;
+//					return NO_REPLY;
 				case 21: //init sd card
 					sdcard_mount();
 					break;
@@ -442,7 +443,7 @@ static int gcode_process_command()
 					if (strcmp(get_str(' '),"IKnowWhatIAmDoing") == 0)
 					{
 						FLASH_BootFromROM();
-						sendReply("bootloader enabled\n\r")
+						sendReply("bootloader enabled\r\n")
 					}
 					else
 					{
@@ -494,7 +495,7 @@ static int gcode_process_command()
 					break;
 				}
 				case 93: // M93 show current axis steps.
-					sendReply("X:%d Y:%d Z:%d E:%d",(int)pa.axis_steps_per_unit[0],(int)pa.axis_steps_per_unit[1],(int)pa.axis_steps_per_unit[2],(int)pa.axis_steps_per_unit[3]);
+					sendReply("X:%d Y:%d Z:%d E:%d\r\n",(int)pa.axis_steps_per_unit[0],(int)pa.axis_steps_per_unit[1],(int)pa.axis_steps_per_unit[2],(int)pa.axis_steps_per_unit[3]);
 					break;
 			  
 				case 104: // M104
@@ -604,7 +605,7 @@ static int gcode_process_command()
 				case 110:
 					break;
 				case 114: // M114 Display current position
-					sendReply("X:%f Y:%f Z:%f E:%f ",current_position[0],current_position[1],current_position[2],current_position[3]);
+					sendReply("X:%f Y:%f Z:%f E:%f \r\n",current_position[0],current_position[1],current_position[2],current_position[3]);
 					break;			  
 				case 115: // M115
                 {
@@ -635,7 +636,7 @@ static int gcode_process_command()
 						read_endstops[5] = (PIO_Get(&Z_MAX_PIN) ^ pa.z_endstop_invert) + 48; 
 
 
-					sendReply("Xmin:%c Ymin:%c Zmin:%c / Xmax:%c Ymax:%c Zmax:%c ",read_endstops[0],read_endstops[1],read_endstops[2],read_endstops[3],read_endstops[4],read_endstops[5]);
+					sendReply("Xmin:%c Ymin:%c Zmin:%c / Xmax:%c Ymax:%c Zmax:%c \r\n",read_endstops[0],read_endstops[1],read_endstops[2],read_endstops[3],read_endstops[4],read_endstops[5]);
 					break;
 				}
 				case 140: // M140 set bed temp
@@ -1052,7 +1053,7 @@ static int gcode_process_command()
 					break;	  
 				}
 			  default:
-					sendReply("Unknown M%d\n\r",get_int('M'));
+					sendReply("ok Unknown M%d\r\n",get_int('M'));
 					return NO_REPLY;
 			}
 			break;
@@ -1066,7 +1067,7 @@ static int gcode_process_command()
 			int new_extruder = get_uint('T');
 			if (new_extruder >= MAX_EXTRUDER)
 			{
-				sendReply("Invalid extruder\n\r");
+				sendReply("Invalid extruder\r\n");
 			}
 			else
 				active_extruder = new_extruder;
@@ -1074,7 +1075,7 @@ static int gcode_process_command()
 			break;
 		}
 		default:
-			sendReply("Unknown command %c\n\r",get_command());
+			sendReply("Unknown command %c\r\n",get_command());
 			return NO_REPLY;
 	}
 	return SEND_REPLY;
@@ -1092,7 +1093,9 @@ static void gcode_line_received()
 			
 			if (line != parserState.last_N+1 && (!has_code('M') || get_uint('M') != 110))
 			{
-				sendReply("rs %u line number incorrect\r\n",parserState.last_N+1);
+				sendReply("Resend: %u line number incorrect\r\n",parserState.last_N+1);
+				printf("Resend: %u line number incorrect\r\n",(unsigned)parserState.last_N+1);
+				printf("Buffer: %s\r\n", parserState.commandBuffer);
 				return;
 			}
 			parserState.line_N = line;
@@ -1102,27 +1105,33 @@ static void gcode_line_received()
 			{
 				if (get_uint('*') != calculate_checksum(parserState.commandBuffer))
 				{
-					sendReply("rs %u incorrect checksum\r\n",parserState.last_N+1);
+					sendReply("Resend: %u incorrect checksum\r\n",parserState.last_N+1);
+                    printf("Resend: %u incorrect checksum\r\n",(unsigned)parserState.last_N+1);
+                    printf("Buffer: %s\r\n", parserState.commandBuffer);
 					return;
 				}
 				*ptr = 0;
 			}
 			else
 			{
-				sendReply("No checksum with line number\n\r");
+				sendReply("No checksum with line number\r\n");
+				printf("No checksum with line number\r\n");
+                printf("Buffer: %s\r\n", parserState.commandBuffer);
 				return;
 			}
 			parserState.last_N = parserState.line_N;			
 		}
 		else if (strchr(parserState.commandBuffer,'*') != NULL)
 		{
-			sendReply("No line number with checksum\n\r");
+			sendReply("No line number with checksum\r\n");
+			printf("No line number with checksum\r\n");
+            printf("Buffer: %s\r\n", parserState.commandBuffer);
 			return;
 		}
 
 		parserState.parsePos = trim_line(parserState.commandBuffer);
 
-//		DEBUG("gcode line: '%s'\n\r",parserState.parsePos);
+//		DEBUG("gcode line: '%s'\r\n",parserState.parsePos);
 		if (gcode_process_command() == SEND_REPLY)
 		{
             if (sdcard_isreplaying() == false)
@@ -1153,12 +1162,12 @@ void gcode_update()
 		switch(chr)
 		{
 			case '\0':
+			case '\n':
 				break;
 			case ';':
 			case '(':
 				parserState.comment_mode = true;
 				break;
-			case '\n':
 			case '\r':
 				parserState.commandBuffer[parserState.commandLen] = 0;
 				parserState.parsePos = parserState.commandBuffer;
@@ -1170,7 +1179,7 @@ void gcode_update()
 			default:
 				if (parserState.commandLen >= BUFFER_SIZE)
 				{
-					printf("error: command buffer full!\n\r");
+					printf("error: command buffer full!\r\n");
 				}
 				else
 				{
@@ -1187,12 +1196,12 @@ void gcode_update()
 		while(!newline){
 			int x=sdcard_getchar(&nchar);
 			if(!x){
-				sendReply("Done printing file\n\r");
+				sendReply("Done printing file\r\n");
 				sdcard_replaystop();
 				newline=1;
 				break;
 			}
-//			printf("%c\n\r",nchar);
+//			printf("%c\r\n",nchar);
 		switch(nchar)
 		{
 			case '\0':
@@ -1214,7 +1223,7 @@ void gcode_update()
 			default:
 				if (parserState.commandLen >= BUFFER_SIZE)
 				{
-					printf("error: command buffer full!\n\r");
+					printf("error: command buffer full!\r\n");
 				}
 				else
 				{

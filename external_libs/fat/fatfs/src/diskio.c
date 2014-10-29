@@ -81,7 +81,7 @@ DRESULT disk_read (
         res = RES_OK;
     }
     else {
-        TRACE_ERROR("MED_Read pb: 0x%X\n\r", result);
+        TRACE_ERROR("MED_Read pb: 0x%X\r\n", result);
         res = RES_ERROR;
     }
 
@@ -129,7 +129,7 @@ DRESULT disk_write (
     }
     else {
       
-        TRACE_ERROR("MED_Write pb: 0x%X\n\r", result);
+        TRACE_ERROR("MED_Write pb: 0x%X\r\n", result);
         res = RES_ERROR;
     }
 

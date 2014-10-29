@@ -335,7 +335,7 @@ static void GetDescriptor(
 
         default:
             TRACE_WARNING(
-                      "USBDDriver_GetDescriptor: Unknown descriptor type (%d)\n\r",
+                      "USBDDriver_GetDescriptor: Unknown descriptor type (%d)\r\n",
                       type);
             USBD_Stall(0);
     }
@@ -404,7 +404,7 @@ static void GetInterface(
 //------------------------------------------------------------------------------
 static void USBDDriver_Test(unsigned char test)
 {
-    TRACE_DEBUG("UDPHS_Test\n\r");
+    TRACE_DEBUG("UDPHS_Test\r\n");
 
     // the lower byte of wIndex must be zero
     // the most significant byte of wIndex is used to specify the specific test mode
@@ -593,7 +593,7 @@ void USBDDriver_RequestHandler(
     
                 default:
                     TRACE_WARNING(
-                              "USBDDriver_RequestHandler: Unknown recipient (%d)\n\r",
+                              "USBDDriver_RequestHandler: Unknown recipient (%d)\r\n",
                               USBGenericRequest_GetRecipient(pRequest));
                     USBD_Stall(0);
             }
@@ -623,7 +623,7 @@ void USBDDriver_RequestHandler(
 
                 default:
                     TRACE_WARNING(
-                              "USBDDriver_RequestHandler: Unknown feature selector (%d)\n\r",
+                              "USBDDriver_RequestHandler: Unknown feature selector (%d)\r\n",
                               USBFeatureRequest_GetFeatureSelector(pRequest));
                     USBD_Stall(0);
             }
@@ -685,7 +685,7 @@ void USBDDriver_RequestHandler(
 #endif
             default:
                 TRACE_WARNING(
-                          "USBDDriver_RequestHandler: Unknown feature selector (%d)\n\r",
+                          "USBDDriver_RequestHandler: Unknown feature selector (%d)\r\n",
                           USBFeatureRequest_GetFeatureSelector(pRequest));
                 USBD_Stall(0);
         }
@@ -708,7 +708,7 @@ void USBDDriver_RequestHandler(
 
     default:
         TRACE_WARNING(
-                  "USBDDriver_RequestHandler: Unknown request code (%d)\n\r",
+                  "USBDDriver_RequestHandler: Unknown request code (%d)\r\n",
                   USBGenericRequest_GetRequest(pRequest));
         USBD_Stall(0);
     }

@@ -148,7 +148,7 @@ void TRACE_DumpFrame(unsigned char *pFrame, unsigned int size)
         printf("%02X ", pFrame[i]);
     }
 
-    printf("\n\r");
+    printf("\r\n");
 }
 
 //------------------------------------------------------------------------------
@@ -181,7 +181,7 @@ void TRACE_DumpMemory(
             PrintChar(*pTmp++);
         }
 
-        printf("\n\r");
+        printf("\r\n");
     }
 
     if( (size%16) != 0) {
@@ -206,7 +206,7 @@ void TRACE_DumpMemory(
             PrintChar(pBuffer[j]);
         }
 
-        printf("\n\r");
+        printf("\r\n");
     }
 }
     
@@ -227,15 +227,15 @@ unsigned char TRACE_GetInteger(unsigned int *pValue)
         }
         else if(key == 0x0D || key == ' ') {
             if(nbNb == 0) {
-                printf("\n\rWrite a number and press ENTER or SPACE!\n\r");       
+                printf("\r\nWrite a number and press ENTER or SPACE!\r\n");       
                 return 0; 
             } else {
-                printf("\n\r"); 
+                printf("\r\n"); 
                 *pValue = value;
                 return 1;
             }
         } else {
-            printf("\n\r'%c' not a number!\n\r", key);
+            printf("\r\n'%c' not a number!\r\n", key);
             return 0;  
         }
     }
@@ -257,11 +257,11 @@ unsigned char TRACE_GetIntegerMinMax(
     }
     
     if(value < min || value > max) {
-        printf("\n\rThe number have to be between %d and %d\n\r", min, max);
+        printf("\r\nThe number have to be between %d and %d\r\n", min, max);
         return 0; 
     }
 
-    printf("\n\r"); 
+    printf("\r\n"); 
     *pValue = value;
     return 1;
 }
@@ -287,12 +287,12 @@ unsigned char TRACE_GetHexa32(unsigned int *pValue)
             value = (value * 16) + (key - 'a' + 10) ;
         }        
         else {
-            printf("\n\rIt is not a hexa character!\n\r");       
+            printf("\r\nIt is not a hexa character!\r\n");       
             return 0; 
         }
     }
 
-    printf("\n\r");    
+    printf("\r\n");    
     *pValue = value;     
     return 1;
 }

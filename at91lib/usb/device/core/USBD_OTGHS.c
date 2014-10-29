@@ -222,7 +222,7 @@ static void OTGHS_EndOfTransfer( unsigned char bEndpoint, char bStatus )
                  pTransfer->remaining + pTransfer->buffered);
         }
         else {
-            TRACE_DEBUG_WP("No callBack\n\r");
+            TRACE_DEBUG_WP("No callBack\r\n");
         }
     }
 }
@@ -313,7 +313,7 @@ static void OTGHS_ReadRequest( USBGenericRequest *pRequest )
     fifo = (AT91C_BASE_OTGHS_EPTFIFO->OTGHS_READEPT0[0]);
     pData++;
     *pData = fifo;
-    //TRACE_ERROR("SETUP: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x\n\r", pData[0],pData[1],pData[2],pData[3],pData[4],pData[5],pData[6],pData[7]);
+    //TRACE_ERROR("SETUP: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x\r\n", pData[0],pData[1],pData[2],pData[3],pData[4],pData[5],pData[6],pData[7]);
 }
 
 //------------------------------------------------------------------------------
@@ -429,9 +429,9 @@ static void OTGHS_EndpointHandler( unsigned char bEndpoint )
             }
             else {
 
-                TRACE_DEBUG_WP("\n\r0pTransfer->buffered %d \n\r", pTransfer->buffered);
-                TRACE_DEBUG_WP("0pTransfer->transferred %d \n\r", pTransfer->transferred);
-                TRACE_DEBUG_WP("0pTransfer->remaining %d \n\r", pTransfer->remaining);
+                TRACE_DEBUG_WP("\r\n0pTransfer->buffered %d \r\n", pTransfer->buffered);
+                TRACE_DEBUG_WP("0pTransfer->transferred %d \r\n", pTransfer->transferred);
+                TRACE_DEBUG_WP("0pTransfer->remaining %d \r\n", pTransfer->remaining);
 
                 TRACE_DEBUG_WP(" %d ", pTransfer->transferred);
 
@@ -596,9 +596,9 @@ static void OTGHS_DmaHandler( unsigned char bEndpoint )
 
         pTransfer->remaining -= justTransferred;
 
-        TRACE_DEBUG_WP("\n\r1pTransfer->buffered %d \n\r", pTransfer->buffered);
-        TRACE_DEBUG_WP("1pTransfer->transferred %d \n\r", pTransfer->transferred);
-        TRACE_DEBUG_WP("1pTransfer->remaining %d \n\r", pTransfer->remaining);
+        TRACE_DEBUG_WP("\r\n1pTransfer->buffered %d \r\n", pTransfer->buffered);
+        TRACE_DEBUG_WP("1pTransfer->transferred %d \r\n", pTransfer->transferred);
+        TRACE_DEBUG_WP("1pTransfer->remaining %d \r\n", pTransfer->remaining);
 
         if( (pTransfer->remaining + pTransfer->buffered) > 0 ) {
 
@@ -638,13 +638,13 @@ static void OTGHS_DmaHandler( unsigned char bEndpoint )
         pTransfer->transferred = pTransfer->buffered
                                  - ((status & AT91C_OTGHS_BUFF_COUNT) >> 16);
         pTransfer->remaining = 0;
-        TRACE_DEBUG_WP("\n\r0pTransfer->buffered %d \n\r", pTransfer->buffered);
-        TRACE_DEBUG_WP("0pTransfer->transferred %d \n\r", pTransfer->transferred);
-        TRACE_DEBUG_WP("0pTransfer->remaining %d \n\r", pTransfer->remaining);
+        TRACE_DEBUG_WP("\r\n0pTransfer->buffered %d \r\n", pTransfer->buffered);
+        TRACE_DEBUG_WP("0pTransfer->transferred %d \r\n", pTransfer->transferred);
+        TRACE_DEBUG_WP("0pTransfer->remaining %d \r\n", pTransfer->remaining);
     }
     else {
 
-        TRACE_ERROR("OTGHS_DmaHandler: Error (0x%08X)\n\r", status);
+        TRACE_ERROR("OTGHS_DmaHandler: Error (0x%08X)\r\n", status);
         result = USBD_STATUS_ABORTED;
     }
 
@@ -681,7 +681,7 @@ void UDPD_IrqHandler(void)
     while (status != 0) {
         //TRACE_ERROR_WP("~");
         if((status&AT91C_OTGHS_VBUSTI)==AT91C_OTGHS_VBUSTI) {
-            TRACE_DEBUG_WP("__VBus\n\r");
+            TRACE_DEBUG_WP("__VBus\r\n");
 
             USBD_Connect();
 
@@ -845,7 +845,7 @@ void UDPD_IrqHandler(void)
                         status &= ~(1 << SHIFT_DMA << numIT);
                         if (status != 0) {
 
-                            TRACE_INFO_WP("\n\r  - ");
+                            TRACE_INFO_WP("\r\n  - ");
                         }
                     }
                     numIT++;
@@ -857,7 +857,7 @@ void UDPD_IrqHandler(void)
         // Retrieve new interrupt status
         status = AT91C_BASE_OTGHS->OTGHS_DEVISR & AT91C_BASE_OTGHS->OTGHS_DEVIMR;
 
-        TRACE_DEBUG_WP("\n\r");
+        TRACE_DEBUG_WP("\r\n");
 
         if (status != 0) {
 
@@ -998,12 +998,12 @@ void USBD_ConfigureEndpoint(const USBEndpointDescriptor *pDescriptor)
     AT91C_BASE_OTGHS->OTGHS_DEVEPTCFG[bEndpoint] |= AT91C_OTGHS_ALLOC;
     if((AT91C_BASE_OTGHS->OTGHS_DEVEPTISR[bEndpoint]&AT91C_OTGHS_CFGOK)==0) {
 
-        TRACE_ERROR("PB bEndpoint: 0x%X\n\r", bEndpoint);
-        TRACE_ERROR("PB bSizeEpt: 0x%X\n\r", bSizeEpt);
-        TRACE_ERROR("PB bEndpointDir: 0x%X\n\r", bEndpointDir);
-        TRACE_ERROR("PB bType: 0x%X\n\r", bType);
-        TRACE_ERROR("PB pEndpoint->bank: 0x%X\n\r", pEndpoint->bank);
-        TRACE_ERROR("PB OTGHS_EPTCFG: 0x%X\n\r", AT91C_BASE_OTGHS->OTGHS_DEVEPTCFG[bEndpoint]);
+        TRACE_ERROR("PB bEndpoint: 0x%X\r\n", bEndpoint);
+        TRACE_ERROR("PB bSizeEpt: 0x%X\r\n", bSizeEpt);
+        TRACE_ERROR("PB bEndpointDir: 0x%X\r\n", bEndpointDir);
+        TRACE_ERROR("PB bType: 0x%X\r\n", bType);
+        TRACE_ERROR("PB pEndpoint->bank: 0x%X\r\n", pEndpoint->bank);
+        TRACE_ERROR("PB OTGHS_EPTCFG: 0x%X\r\n", AT91C_BASE_OTGHS->OTGHS_DEVEPTCFG[bEndpoint]);
         for(;;);
     }
 }
@@ -1090,7 +1090,7 @@ char USBD_Write( unsigned char    bEndpoint,
                 pTransfer->buffered = pTransfer->remaining;
             }
 
-            TRACE_DEBUG_WP("\n\r_WR:%d ", pTransfer->remaining );
+            TRACE_DEBUG_WP("\r\n_WR:%d ", pTransfer->remaining );
             TRACE_DEBUG_WP("B:%d ", pTransfer->buffered );
             TRACE_DEBUG_WP("T:%d ", pTransfer->transferred );
 
@@ -1186,7 +1186,7 @@ char USBD_Read( unsigned char    bEndpoint,
         // Enable DMA endpoint interrupt
         AT91C_BASE_OTGHS->OTGHS_DEVIER = (1<<SHIFT_DMA<<bEndpoint);
 
-        TRACE_DEBUG_WP("\n\r_RR:%d ", pTransfer->remaining );
+        TRACE_DEBUG_WP("\r\n_RR:%d ", pTransfer->remaining );
         TRACE_DEBUG_WP("B:%d ", pTransfer->buffered );
         TRACE_DEBUG_WP("T:%d ", pTransfer->transferred );
 
@@ -1261,7 +1261,7 @@ void USBD_Unhalt( unsigned char bEndpoint )
 
         if((AT91C_BASE_OTGHS->OTGHS_DEVEPTISR[bEndpoint]&AT91C_OTGHS_CFGOK)==0) {
 
-            TRACE_ERROR("PB bEndpoint: 0x%X\n\r", bEndpoint);
+            TRACE_ERROR("PB bEndpoint: 0x%X\r\n", bEndpoint);
             for(;;);
         }
 
@@ -1301,11 +1301,11 @@ unsigned char USBD_IsHighSpeed( void )
 
     if(AT91C_OTGHS_SPEED_SR_HS == (AT91C_BASE_OTGHS->OTGHS_SR & (0x03<<12))) {
         // High Speed
-        TRACE_DEBUG_WP("High Speed\n\r");
+        TRACE_DEBUG_WP("High Speed\r\n");
         status = 1;
     }
     else {
-        TRACE_DEBUG_WP("Full Speed\n\r");
+        TRACE_DEBUG_WP("Full Speed\r\n");
     }
     return( status );
 }
@@ -1324,7 +1324,7 @@ unsigned char USBD_Stall( unsigned char bEndpoint )
     // Check that endpoint is in Idle state
     if (pEndpoint->state != UDP_ENDPOINT_IDLE) {
 
-        TRACE_WARNING("UDP_Stall: Endpoint%d locked\n\r", bEndpoint);
+        TRACE_WARNING("UDP_Stall: Endpoint%d locked\r\n", bEndpoint);
         return USBD_STATUS_LOCKED;
     }
 
@@ -1340,12 +1340,12 @@ unsigned char USBD_Stall( unsigned char bEndpoint )
 //------------------------------------------------------------------------------
 void USBD_RemoteWakeUp(void)
 {
-    TRACE_DEBUG_WP("Remote WakeUp\n\r");
+    TRACE_DEBUG_WP("Remote WakeUp\r\n");
 
     // Device is currently suspended
     if (deviceState == USBD_STATE_SUSPENDED) {
 
-        TRACE_DEBUG_WP("RW\n\r");
+        TRACE_DEBUG_WP("RW\r\n");
         OTGHS_EnableUsbClock();
         OTGHS_EnableTransceiver();
 
@@ -1355,7 +1355,7 @@ void USBD_RemoteWakeUp(void)
     // Device is NOT suspended
     else {
 
-        TRACE_WARNING("USBD_RemoteWakeUp: Device is not suspended\n\r");
+        TRACE_WARNING("USBD_RemoteWakeUp: Device is not suspended\r\n");
     }
 }
 
@@ -1508,7 +1508,7 @@ void USBD_Test( unsigned char bIndex )
             TRACE_DEBUG_WP("SEND_ZLP ");
             break;
     }
-    TRACE_DEBUG_WP("\n\r");
+    TRACE_DEBUG_WP("\r\n");
 }
 
 //------------------------------------------------------------------------------
@@ -1522,7 +1522,7 @@ void USBD_Init(void)
     // forceFS must not be used !
     int i;
 
-    TRACE_DEBUG_WP("USBD Init()\n\r");
+    TRACE_DEBUG_WP("USBD Init()\r\n");
 
     // disable Watchdog
     AT91C_BASE_WDTC->WDTC_WDMR = AT91C_WDTC_WDDIS;
@@ -1581,7 +1581,7 @@ void USBD_Init(void)
 
     // Enable clock OTG pad
     AT91C_BASE_OTGHS->OTGHS_CTRL &= ~AT91C_OTGHS_FRZCLKCTRL;
-   TRACE_DEBUG("AT91C_OTGHS_CTRL: 0x%X\n\r", AT91C_BASE_OTGHS->OTGHS_CTRL );
+   TRACE_DEBUG("AT91C_OTGHS_CTRL: 0x%X\r\n", AT91C_BASE_OTGHS->OTGHS_CTRL );
 
     // Clear General IT
     AT91C_BASE_OTGHS->OTGHS_SCR = 0x01FF;
@@ -1670,13 +1670,13 @@ void USBD_Init(void)
 
     AT91C_BASE_OTGHS->OTGHS_CTRL |= AT91C_OTGHS_VBUSTI;
 
-   TRACE_DEBUG("AT91C_OTGHS_CTRL: 0x%X\n\r", AT91C_BASE_OTGHS->OTGHS_CTRL );
-   TRACE_DEBUG("AT91C_OTGHS_SR: 0x%X\n\r", AT91C_BASE_OTGHS->OTGHS_SR );
+   TRACE_DEBUG("AT91C_OTGHS_CTRL: 0x%X\r\n", AT91C_BASE_OTGHS->OTGHS_CTRL );
+   TRACE_DEBUG("AT91C_OTGHS_SR: 0x%X\r\n", AT91C_BASE_OTGHS->OTGHS_SR );
   
     AT91C_BASE_OTGHS->OTGHS_DEVIER = AT91C_OTGHS_WAKEUP;
     
-   TRACE_DEBUG("NUM_IT_MAX_DMA: 0x%X\n\r", NUM_IT_MAX_DMA );
-   TRACE_DEBUG("NUM_IT_MAX: 0x%X\n\r", NUM_IT_MAX );
+   TRACE_DEBUG("NUM_IT_MAX_DMA: 0x%X\r\n", NUM_IT_MAX_DMA );
+   TRACE_DEBUG("NUM_IT_MAX: 0x%X\r\n", NUM_IT_MAX );
 
 }
 

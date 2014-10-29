@@ -91,7 +91,7 @@ void get_coordinates()
 			feedrate = next_feedrate;
 	}
 
-	//printf("new POS:%d %d %d %d %d\n\r",(int)destination[0],(int)destination[1],(int)destination[2],(int)destination[3],(int)feedrate);
+	//printf("new POS:%d %d %d %d %d\r\n",(int)destination[0],(int)destination[1],(int)destination[2],(int)destination[3],(int)feedrate);
 }
 
 void get_arc_coordinates()
@@ -150,7 +150,7 @@ void prepare_move()
 		help_feedrate = ((long)feedrate*(long)100);
 	}
 
-	//printf("new POS 1:%d %d %d %d %d\n\r",(int)destination[0],(int)destination[1],(int)destination[2],(int)destination[3],(int)feedrate);
+	printf("new POS 1:%d %d %d %d %d\r\n",(int)destination[0],(int)destination[1],(int)destination[2],(int)destination[3],(int)feedrate);
 	plan_buffer_line(destination[X_AXIS], destination[Y_AXIS], destination[Z_AXIS], destination[E_AXIS], help_feedrate/6000.0,active_extruder);
 
 	for(i=0; i < NUM_AXIS; i++)
@@ -207,7 +207,7 @@ void kill(char debug)
 	disable_e1();
 	
 	if(debug)
-		printf("Kill Command\n\r");
+		printf("Kill Command\r\n");
    
 }
 
@@ -616,8 +616,11 @@ void planner_recalculate_trapezoids()
 
 void planner_recalculate()
 {
+	printf("planner_reverse_pass()\r\n");
 	planner_reverse_pass();
+	printf("planner_forward_pass()\r\n");
 	planner_forward_pass();
+	printf("planner_recalculate_trapezoids()\r\n");
 	planner_recalculate_trapezoids();
 }
 
@@ -726,7 +729,7 @@ void plan_buffer_line(float x, float y, float z, float e, float feed_rate, unsig
 	// Calculate the buffer head after we push this byte
 	short next_buffer_head = next_block_index(block_buffer_head);
 
-	//printf("next head:%u\n\r",next_buffer_head);
+	printf("next head:%u, current head:%u, current tail:%u\r\n",next_buffer_head,block_buffer_head,block_buffer_tail);
 
 	// If the buffer is full: good! That means we are well ahead of the robot. 
 	// Rest here until there is room in the buffer.
@@ -736,6 +739,8 @@ void plan_buffer_line(float x, float y, float z, float e, float feed_rate, unsig
 		manage_inactivity(1); 
 	}
     
+	printf("waiting done\r\n");
+
 		// The target position of the tool in absolute steps
 		// Calculate target position in absolute steps
 		//this should be done after the wait, because otherwise a M92 code within the gcode disrupts this calculation somehow
@@ -1070,7 +1075,7 @@ void plan_buffer_line(float x, float y, float z, float e, float feed_rate, unsig
 
 	#endif // ADVANCE
 
-
+	printf("calculate_trapezoid_for_block()\r\n");
 	calculate_trapezoid_for_block(block, block->entry_speed/block->nominal_speed,
 	safe_speed/block->nominal_speed);
 
@@ -1080,8 +1085,11 @@ void plan_buffer_line(float x, float y, float z, float e, float feed_rate, unsig
 	// Update position
 	memcpy(position, target, sizeof(target)); // position[] = target[]
 
+	printf("planner_recalculate()\r\n");
 	planner_recalculate();
+	printf("st_wake_up()\r\n");
 	st_wake_up();
+
 }
 
 short calc_plannerpuffer_fill(void)

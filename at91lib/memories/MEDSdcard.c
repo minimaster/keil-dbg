@@ -206,14 +206,14 @@ static unsigned char MEDSdcard_Read(Media         *media,
     // Check that the media is ready
     if (media->state != MED_STATE_READY) {
         
-        TRACE_INFO("Media busy\n\r");
+        TRACE_INFO("Media busy\r\n");
         return MED_STATUS_BUSY;
     }
     
     // Check that the data to read is not too big
     if ((length + address) > media->size) {
         
-        TRACE_WARNING("MEDSdcard_Read: Data too big: %d, %d\n\r",
+        TRACE_WARNING("MEDSdcard_Read: Data too big: %d, %d\r\n",
                       (int)length, (int)address);
         return MED_STATUS_ERROR;
     }
@@ -260,14 +260,14 @@ static unsigned char MEDSdcard_Write(Media         *media,
     // Check that the media if ready
     if (media->state != MED_STATE_READY) {
         
-        TRACE_WARNING("MEDSdcard_Write: Media is busy\n\r");
+        TRACE_WARNING("MEDSdcard_Write: Media is busy\r\n");
         return MED_STATUS_BUSY;
     }
     
     // Check that the data to write is not too big
     if ((length + address) > media->size) {
         
-        TRACE_WARNING("MEDSdcard_Write: Data too big\n\r");
+        TRACE_WARNING("MEDSdcard_Write: Data too big\r\n");
         return MED_STATUS_ERROR;
     }
     
@@ -342,12 +342,12 @@ static unsigned char MEDSdusb_Read(Media         *media,
     
     // Check that the media is ready
     if (media->state != MED_STATE_READY) {
-        TRACE_INFO("MEDSdusb_Read: Busy\n\r");
+        TRACE_INFO("MEDSdusb_Read: Busy\r\n");
         return MED_STATUS_BUSY;
     }
     // Check that the data to read is not too big
     if ((length + address) > media->size) {
-        TRACE_WARNING("MEDSdusb_Read: Data too big: %d, %d\n\r",
+        TRACE_WARNING("MEDSdusb_Read: Data too big: %d, %d\r\n",
                       (int)length, (int)address);
         return MED_STATUS_ERROR;
     }
@@ -398,12 +398,12 @@ static unsigned char MEDSdusb_Write(Media         *media,
     
     // Check that the media if ready
     if (media->state != MED_STATE_READY) {
-        TRACE_INFO("MEDSdusb_Write: Busy\n\r");
+        TRACE_INFO("MEDSdusb_Write: Busy\r\n");
         return MED_STATUS_BUSY;
     }
     // Check that the data to write is not too big
     if ((length + address) > media->size) {
-        TRACE_WARNING("MEDSdcard_Write: Data too big\n\r");
+        TRACE_WARNING("MEDSdcard_Write: Data too big\r\n");
         return MED_STATUS_ERROR;
     }
     // Put the media in Busy state
@@ -451,7 +451,7 @@ unsigned char MEDSdcard_Detect(Media * media, unsigned char mciID)
 
 unsigned char MEDSdcard_Initialize(Media *media, unsigned char mciID)
 {
-    TRACE_INFO("MEDSdcard init\n\r");
+    TRACE_INFO("MEDSdcard init\r\n");
     
     // Initialize SDcard
     //--------------------------------------------------------------------------
@@ -475,7 +475,7 @@ unsigned char MEDSdcard_Initialize(Media *media, unsigned char mciID)
         MCI_Init(mciDrv, BOARD_SD_MCI1_BASE, BOARD_SD_MCI1_ID, BOARD_SD_MCI1_SLOT, MCI_INTERRUPT_MODE);
         IRQ_EnableIT(BOARD_SD_MCI1_ID);
 #else
-        TRACE_ERROR("SD/MMC card initialization failed (MCI1 not supported)\n\r");
+        TRACE_ERROR("SD/MMC card initialization failed (MCI1 not supported)\r\n");
 #endif
     }
 #if MCI_BUSY_CHECK_FIX && defined(BOARD_SD_DAT0)
@@ -485,14 +485,14 @@ unsigned char MEDSdcard_Initialize(Media *media, unsigned char mciID)
     // Initialize the SD card driver
     if (SD_Init(sdDrv, (SdDriver *)mciDrv)) {
         
-        TRACE_ERROR("SD/MMC card initialization failed\n\r");
+        TRACE_ERROR("SD/MMC card initialization failed\r\n");
         return 0;
     }
     else {
         
         //SD_DisplayRegisterCSD(&sdDrv);
-        TRACE_INFO("SD/MMC card initialization successful\n\r");
-        TRACE_INFO("Card size: %d MB\n\r", (int)(MMC_GetTotalSizeKB(sdDrv)/1024));
+        TRACE_INFO("SD/MMC card initialization successful\r\n");
+        TRACE_INFO("Card size: %d MB\r\n", (int)(MMC_GetTotalSizeKB(sdDrv)/1024));
     }
     MCI_SetSpeed(mciDrv, sdDrv->transSpeed, sdDrv->transSpeed, BOARD_MCK);
     
@@ -537,7 +537,7 @@ unsigned char MEDSdcard_Initialize(Media *media, unsigned char mciID)
 //------------------------------------------------------------------------------
 unsigned char MEDSdusb_Initialize(Media *media, unsigned char mciID)
 {
-    TRACE_INFO("MEDSdusb init\n\r");
+    TRACE_INFO("MEDSdusb init\r\n");
     
     // Initialize SDcard
     //--------------------------------------------------------------------------
@@ -561,7 +561,7 @@ unsigned char MEDSdusb_Initialize(Media *media, unsigned char mciID)
         MCI_Init(mciDrv, BOARD_SD_MCI1_BASE, BOARD_SD_MCI1_ID, BOARD_SD_SLOT, MCI_INTERRUPT_MODE);
         IRQ_EnableIT(BOARD_SD_MCI1_ID);
 #else
-        TRACE_ERROR("SD/MMC card initialization failed (MCI1 not supported)\n\r");
+        TRACE_ERROR("SD/MMC card initialization failed (MCI1 not supported)\r\n");
 #endif
     }
 #if MCI_BUSY_CHECK_FIX && defined(BOARD_SD_DAT0)
@@ -571,13 +571,13 @@ unsigned char MEDSdusb_Initialize(Media *media, unsigned char mciID)
     // Initialize the SD card driver
     if (SD_Init(sdDrv, (SdDriver *)mciDrv)) {
         
-        TRACE_ERROR("SD/MMC card initialization failed\n\r");
+        TRACE_ERROR("SD/MMC card initialization failed\r\n");
         return 0;
     }
     else {
         
-        TRACE_INFO("SD/MMC card initialization successful\n\r");
-        TRACE_INFO("Card size: %d MB\n\r", (int)(MMC_GetTotalSizeKB(sdDrv)/1024));
+        TRACE_INFO("SD/MMC card initialization successful\r\n");
+        TRACE_INFO("Card size: %d MB\r\n", (int)(MMC_GetTotalSizeKB(sdDrv)/1024));
     }
     MCI_SetSpeed(mciDrv, sdDrv->transSpeed, sdDrv->transSpeed, BOARD_MCK);
     
@@ -622,7 +622,7 @@ void MEDSdcard_EraseAll(Media *media)
     unsigned int multiBlock = 1; // change buffer size for multiblocks
     unsigned char error;
     
-    TRACE_INFO("MEDSdcard Erase All ...\n\r");
+    TRACE_INFO("MEDSdcard Erase All ...\r\n");
     
     // Clear the block buffer
     memset(buffer, 0, media->blockSize * multiBlock);
@@ -632,7 +632,7 @@ void MEDSdcard_EraseAll(Media *media)
          block += multiBlock) {
         
         error = SD_WriteBlock((SdCard*)media->interface, block, multiBlock, buffer);
-        ASSERT(!error, "\n\r-F- Failed to write block (%d) #%u\n\r", error, block);
+        ASSERT(!error, "\r\n-F- Failed to write block (%d) #%u\r\n", error, block);
     }
 }
 
@@ -650,7 +650,7 @@ void MEDSdcard_EraseBlock(Media *media, unsigned int block)
     memset(buffer, 0, media->blockSize);
     
     error = SD_WriteBlock((SdCard*)media->interface, block, 1, buffer);
-    ASSERT(!error, "\n\r-F- Failed to write block (%d) #%u\n\r", error, block);
+    ASSERT(!error, "\r\n-F- Failed to write block (%d) #%u\r\n", error, block);
 }
 
 //------------------------------------------------------------------------------

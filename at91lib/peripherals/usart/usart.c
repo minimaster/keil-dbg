@@ -128,7 +128,7 @@ void USART_Write(
 
             if (timeOut == 0) {
 
-                TRACE_ERROR("USART_Write: Timed out.\n\r");
+                TRACE_ERROR("USART_Write: Timed out.\r\n");
                 return;
             }
             timeOut--;
@@ -196,7 +196,7 @@ unsigned short USART_Read(
 
             if (timeOut == 0) {
 
-                TRACE_ERROR("USART_Read: Timed out.\n\r");
+                TRACE_ERROR("USART_Read: Timed out.\r\n");
                 return 0;
             }
             timeOut--;

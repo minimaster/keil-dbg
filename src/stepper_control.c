@@ -236,7 +236,7 @@ void TC0_IrqHandler(void)
 		current_block = plan_get_current_block();
 		if (current_block != NULL)
 		{
-			//printf("get block\n\r");
+			//printf("get block\r\n");
 			trapezoid_generator_reset();
 			counter_x = -(current_block->step_event_count >> 1);
 			counter_y = counter_x;

@@ -170,18 +170,18 @@ void FLASH_StoreSettings(void)
 	
     if(pageLocked)
 	{
-		printf("Page Locked %d\n\r",pageLocked);
+		printf("Page Locked %d\r\n",pageLocked);
 		
 		error = FLASHD_Unlock(lastPageAddress, lastPageAddress + pa_size, 0, 0);
 		if(error)
 		{
-			printf("Unlock error\n\r");
+			printf("Unlock error\r\n");
 			usb_printf("Flash Error\r\n");
 			return;
 		}
 		else
 		{
-			printf("Unlocking page\n\r");
+			printf("Unlocking page\r\n");
 		}
 	}
 		
@@ -190,7 +190,7 @@ void FLASH_StoreSettings(void)
 	error = FLASHD_Write(lastPageAddress, pa_ptr, pa_size);
 	if(error)
 	{
-		printf("Flash Write error %d\n\r",error);
+		printf("Flash Write error %d\r\n",error);
 	}
 	
 	//Check Data in Flash
@@ -198,7 +198,7 @@ void FLASH_StoreSettings(void)
 	{
 		if((*pLastPageData++) != (*pa_ptr++))
 		{
-			printf("Write err %d\n\r",cnt_s);
+			printf("Write err %d\r\n",cnt_s);
 			w_err++;
 		}
 	}
@@ -207,21 +207,21 @@ void FLASH_StoreSettings(void)
 	if(w_err > 0)
 	{
 		//Verify Error 
-		printf("Flash Error\n\r");
+		printf("Flash Error\r\n");
 		usb_printf("Flash Error\r\n");
 	}
 	else
 	{
 		//Flash content is good, lock the page
-		printf("Locking page\n\r");
+		printf("Locking page\r\n");
 		error = FLASHD_Lock(lastPageAddress, lastPageAddress + pa_size, 0, 0);
 		if(error)
 		{
-			printf("Lock Error %d\n\r",error);
+			printf("Lock Error %d\r\n",error);
 		}
 		else
 		{
-			printf("Flash write OK\n\r");
+			printf("Flash write OK\r\n");
 			usb_printf("Flash write OK\r\n");
 		}
 	}
@@ -403,18 +403,18 @@ void FLASH_LoadSettings(void)
 		/*
 		printf("0x%02X ",*pLastPageData);
 		if((cnt_s+1)%16 == 0)
-			printf("\n\r");
+			printf("\r\n");
 		*/
 	}
 	
-	printf("Read Parameters from flash\n\r");
+	printf("Read Parameters from flash\r\n");
 	
 	
 	//Check the CRC16
 	help_crc = calc_crc16();
 	if(pa.chk_sum != help_crc)
 	{
-		printf("CRC NOT OK\n\r");
+		printf("CRC NOT OK\r\n");
 		usb_printf("Flash Error CRC  Load Initvalues\r\n");
 		//Error --> load init Parameters
 		init_parameters();
@@ -425,12 +425,12 @@ void FLASH_LoadSettings(void)
 	//Check the Parameter Version
 	if(strncmp(ver,pa.version,3)==0)
 	{
-		printf("VER OK\n\r");
+		printf("VER OK\r\n");
 		usb_printf("Load Paramaters from Flash OK\r\n");
 	}
 	else
 	{
-		printf("VER NOT OK\n\r");
+		printf("VER NOT OK\r\n");
 		usb_printf("Flash Error Version  Load Initvalues\r\n");
 		//Error --> load init Parameters
 		init_parameters();
@@ -460,7 +460,7 @@ unsigned short calc_crc16(void)
 	
 	pa_size = sizeof(pa) - 2;	//skip 2 byte chksum + 131 byte parameter
 	
-	printf("sizeof pa struct:%d \n\r", pa_size);	//result 131 --> ??? 134
+	printf("sizeof pa struct:%d \r\n", pa_size);	//result 131 --> ??? 134
 	
 	pa_ptr = (unsigned char*)&pa;
 	
@@ -484,7 +484,7 @@ unsigned short calc_crc16(void)
 	data = crc;
 	crc = (crc << 8) | (data >> 8 & 0xff);
 	
-	printf("CRC16: 0x%04X \n\r", crc);
+	printf("CRC16: 0x%04X \r\n", crc);
 	
 	return (crc);
 	

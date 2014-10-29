@@ -64,8 +64,8 @@ void sdcard_selectfile(const char* name)
 {
 	strcpy(selectedfileBuffer,name);
 	selectedFile = selectedfileBuffer;
-	printf("sdcard_selectfile: selected file %s\n\r",selectedFile);
-	usb_printf("File selected: %s\n\r",selectedFile);
+	printf("sdcard_selectfile: selected file %s\r\n",selectedFile);
+	usb_printf("File selected: %s\r\n",selectedFile);
 }
 
 unsigned char sdcard_iscapturing()
@@ -84,13 +84,13 @@ int sdcard_getchar(unsigned char* chr)
 	res = f_read(&replayFile,chr,1,&read);
 	if (res != FR_OK)
 	{
-		printf("sdcard_getchar: error %s\n\r",getError(res));
+		printf("sdcard_getchar: error %s\r\n",getError(res));
 		return 0;
 	}
 
 	if (read != 1)
 	{
-		printf("sdcard_getchar: end of file\n\r");
+		printf("sdcard_getchar: end of file\r\n");
 		return 0;
 	}	
 
@@ -113,15 +113,15 @@ void sdcard_replaystart()
 			return;
 		}
 
-		printf("sdcard_replaystart: opening file %s for replay\n\r",selectedFile);
+		printf("sdcard_replaystart: opening file %s for replay\r\n",selectedFile);
 		FRESULT res = f_open(&replayFile,selectedFile,FA_OPEN_EXISTING|FA_READ);
 		if (res != FR_OK)
 		{
-			printf("sdcard_replaystart: error %s\n\r",getError(res));
-			usb_printf("error: file.open failed\n\r");
+			printf("sdcard_replaystart: error %s\r\n",getError(res));
+			usb_printf("error: file.open failed\r\n");
 			return;
 		}
-		usb_printf("File opened: %s \n\rok\n\r",selectedFile);
+		usb_printf("File opened: %s \r\nok\r\n",selectedFile);
 	}
 	replay_mode = 1;
 	replay_pause = 0;
@@ -135,7 +135,7 @@ void sdcard_replaypause()
 	if (!replay_mode)
 		return;
 
-	printf("sdcard_replaypause\n\r");
+	printf("sdcard_replaypause\r\n");
 	replay_pause = 1;
 }
 
@@ -162,8 +162,8 @@ void sdcard_capturestart(const char* name)
 {
 	strcpy(selectedfileBuffer,name);
 	selectedFile = selectedfileBuffer;
-	printf("sdcard_capturestart: selected file %s\n\r",selectedFile);
-	usb_printf("Writing to file: %s\n\r",selectedFile);
+	printf("sdcard_capturestart: selected file %s\r\n",selectedFile);
+	usb_printf("Writing to file: %s\r\n",selectedFile);
 	if (!selectedFile)
 	{
 		usb_printf("error: file not selected\r\n");
@@ -173,12 +173,12 @@ void sdcard_capturestart(const char* name)
 	if (capture_mode)
 		sdcard_capturestop();
 		
-	printf("sdcard_capturestart: opening file %s for capture\n\r",selectedFile);
+	printf("sdcard_capturestart: opening file %s for capture\r\n",selectedFile);
 	FRESULT res = f_open(&captureFile,selectedFile,FA_CREATE_ALWAYS|FA_WRITE|FA_READ);
 
 	if (res != FR_OK)
 	{
-		printf("sdcard_capturestart: failed to open file, error: %s\n\r",getError(res));
+		printf("sdcard_capturestart: failed to open file, error: %s\r\n",getError(res));
 		usb_printf("error: failed to open file\r\n");
 		return;
 	}
@@ -197,7 +197,7 @@ void sdcard_setposition(unsigned int filepos)
 
 void sdcard_capturestop()
 {
-	printf("sdcard_capturestop\n\r");
+	printf("sdcard_capturestop\r\n");
 	
 	if (!capture_mode)
 	{
@@ -205,7 +205,7 @@ void sdcard_capturestop()
 		return;
 	}
 	
-	usb_printf("%d bytes written\n\r",f_tell(&captureFile));
+	usb_printf("%d bytes written\r\n",f_tell(&captureFile));
 	f_sync(&captureFile);
 	f_close(&captureFile);
 	capture_mode = 0;
@@ -223,13 +223,13 @@ unsigned char sdcard_writeline(const char* line)
 	res = f_write(&captureFile,line,strlen(line),&written);
 	if (res != FR_OK)
 	{
-		printf("sdcard_writeline error %s\n\r",getError(res));
+		printf("sdcard_writeline error %s\r\n",getError(res));
 		return 0;
 	}
 
 	if (strlen(line) != written)
 	{
-		printf("sdcard_writeline error: disk full?\n\r");
+		printf("sdcard_writeline error: disk full?\r\n");
 		return 0;
 	}
 	f_write(&captureFile,"\n",1,&written);
@@ -248,12 +248,12 @@ void sdcard_handle_state()
 	{
 		if (has_card)
 		{
-			printf("sdcard: card inserted\n\r");
+			printf("sdcard: card inserted\r\n");
 			sdcard_mount();
 		}
 		else
 		{
-			printf("sdcard: card removed\n\r");
+			printf("sdcard: card removed\r\n");
 			sdcard_unmount();
 			is_mounted = 0;
 		}
@@ -316,11 +316,11 @@ void sdcard_printstatus()
 {
 	if (!replay_mode)
 	{
-		usb_printf("ok not printing\n\r");
+		usb_printf("ok not printing\r\n");
 	}
 	else
 	{
-		usb_printf("ok %02d%% (%d/%d)\n\r",(int)(f_tell(&replayFile)/(double)f_size(&replayFile)),f_tell(&replayFile),f_size(&replayFile));
+		usb_printf("ok %02d%% (%d/%d)\r\n",(int)(f_tell(&replayFile)/(double)f_size(&replayFile)),f_tell(&replayFile),f_size(&replayFile));
 	}
 }
 
@@ -334,9 +334,9 @@ void sdcard_listfiles()
 	if (!is_mounted)
 	{
 		if (!sdcard_carddetected())
-			usb_printf("error: sd card not inserted\r\n");
+			usb_printf("SD init fail\r\n");
 		else
-			usb_printf("error: sd card not mounted\r\n");
+			usb_printf("volume.init failed\r\n");
 		return;
 	}
 	
@@ -345,7 +345,7 @@ void sdcard_listfiles()
 	if (res != FR_OK)
 	{
 		printf("sdcard_listfiles: error %s\r\n",getError(res));
-		usb_printf("error: %s\r\n",getError(res));
+		usb_printf("ERROR: openRoot failed %s\r\n",getError(res));
 		return;
 	}
 	
@@ -357,7 +357,7 @@ void sdcard_listfiles()
 		res = f_readdir(&rootDir,&fileInfo);
 		if (res != FR_OK)
 		{
-			printf("sdcard_listfiles: error %s\r\n",getError(res));
+			printf("ERROR: openRoot failed %s\r\n",getError(res));
 			break;
 		}
 		
@@ -368,7 +368,7 @@ void sdcard_listfiles()
 		{
 			filename = fileInfo.fname;
 			usb_printf("%s\r\n",filename);
-			printf("\t%s\n\r",filename);
+			printf("\t%s\r\n",filename);
 		}
 	}
 	//usb_printf("}\r\n");

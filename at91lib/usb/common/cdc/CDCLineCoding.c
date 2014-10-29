@@ -61,13 +61,13 @@ void CDCLineCoding_Initialize(CDCLineCoding *lineCoding,
                               unsigned char databits)
 {
     ASSERT(stopbits <= CDCLineCoding_TWOSTOPBITS,
-           "CDCLineCoding_Initialize: Invalid stopbits value (%d)\n\r",
+           "CDCLineCoding_Initialize: Invalid stopbits value (%d)\r\n",
            stopbits);
     ASSERT(parity <= CDCLineCoding_SPACEPARITY,
-           "CDCLineCoding_Initialize: Invalid parity value (%d)\n\r",
+           "CDCLineCoding_Initialize: Invalid parity value (%d)\r\n",
            parity);
     ASSERT(((databits >= 5) && (databits <= 8)) || (databits == 16),
-           "CDCLineCoding_Initialize: Invalid databits value (%d)\n\r",
+           "CDCLineCoding_Initialize: Invalid databits value (%d)\r\n",
            databits);
 
     lineCoding->dwDTERate = bitrate;

@@ -106,7 +106,7 @@ void EFC_TranslateAddress(
     }
 #endif
    
-    TRACE_DEBUG("Translated 0x%08X to page=%d and offset=%d\n\r",
+    TRACE_DEBUG("Translated 0x%08X to page=%d and offset=%d\r\n",
               address, page, offset);
 
     // Store values
@@ -184,13 +184,13 @@ void EFC_StartCommand(AT91S_EFC *pEfc, unsigned char command, unsigned short arg
         case AT91C_EFC_FCMD_SLB:
         case AT91C_EFC_FCMD_CLB:
             ASSERT(argument < AT91C_IFLASH_NB_OF_PAGES,
-                   "-F- Embedded flash has only %d pages\n\r",
+                   "-F- Embedded flash has only %d pages\r\n",
                    AT91C_IFLASH_NB_OF_PAGES);
             break;
 
         case AT91C_EFC_FCMD_SFB:
         case AT91C_EFC_FCMD_CFB:
-            ASSERT(argument < CHIP_EFC_NUM_GPNVMS, "-F- Embedded flash has only %d GPNVMs\n\r", CHIP_EFC_NUM_GPNVMS);
+            ASSERT(argument < CHIP_EFC_NUM_GPNVMS, "-F- Embedded flash has only %d GPNVMs\r\n", CHIP_EFC_NUM_GPNVMS);
             break;
 
         case AT91C_EFC_FCMD_GETD:
@@ -200,14 +200,14 @@ void EFC_StartCommand(AT91S_EFC *pEfc, unsigned char command, unsigned short arg
 #ifdef AT91C_EFC_FCMD_STUI
         case AT91C_EFC_FCMD_STUI:
 #endif
-            ASSERT(argument == 0, "-F- Argument is meaningless for the given command.\n\r");
+            ASSERT(argument == 0, "-F- Argument is meaningless for the given command.\r\n");
             break;
 
-        default: ASSERT(0, "-F- Unknown command %d\n\r", command);
+        default: ASSERT(0, "-F- Unknown command %d\r\n", command);
     }
 
     // Start commandEmbedded flash 
-    ASSERT((pEfc->EFC_FSR & AT91C_EFC_FRDY) == AT91C_EFC_FRDY, "-F- EEFC is not ready\n\r");
+    ASSERT((pEfc->EFC_FSR & AT91C_EFC_FRDY) == AT91C_EFC_FRDY, "-F- EEFC is not ready\r\n");
     pEfc->EFC_FCR = (0x5A << 24) | (argument << 8) | command;
 }
 

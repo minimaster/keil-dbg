@@ -137,7 +137,7 @@ void DMAD_Initialize(unsigned char channel, unsigned char defaultHandler)
     
     // Read the channel handler status to ensure the channel is a free channel.
     status = DMA_GetChannelStatus();
-    TRACE_INFO ("DMAD_Initialize channel %x  \n\r", channel);
+    TRACE_INFO ("DMAD_Initialize channel %x  \r\n", channel);
     SANITY_CHECK(!(status & (1 << channel)));
     // Clear any pending interrupts on the channel.
     DMA_GetStatus();
@@ -176,7 +176,7 @@ unsigned char DMAD_Configure_Buffer(unsigned char channel,
     DmaTransfer *pTransfer = &(dmad.transfers[channel]);
     // Check that no transfer is pending on the channel
     if (pTransfer-> transferSize > 0 ) {
-        TRACE_ERROR("DAM transfer is already pending\n\r");
+        TRACE_ERROR("DAM transfer is already pending\r\n");
         return DMAD_ERROR_BUSY;
     }
     // Configure source transfer mode.
@@ -229,7 +229,7 @@ unsigned char DMAD_Configure_TransferController(unsigned char channel,
     DmaTransfer *pTransfer = &(dmad.transfers[channel]);
     // Check that no transfer is pending on the channel
     if (pTransfer-> transferSize > 0 ) {
-        TRACE_ERROR("DAM transfer is already pending\n\r");
+        TRACE_ERROR("DAM transfer is already pending\r\n");
         return DMAD_ERROR_BUSY;
     }
     pTransfer->bufSize = bufSize; 
@@ -263,7 +263,7 @@ unsigned char DMAD_BufferTransfer(unsigned char channel,
     DmaTransfer *pTransfer = &(dmad.transfers[channel]);
     // Check that no transfer is pending on the channel
     if (pTransfer-> transferSize > 0 ) {
-        TRACE_ERROR("DAM transfer is already pending\n\r");
+        TRACE_ERROR("DAM transfer is already pending\r\n");
         return DMAD_ERROR_BUSY;
     }
     pTransfer->status = DMAD_ERROR_BUSY; 

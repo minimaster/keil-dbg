@@ -69,8 +69,8 @@ void ADC12_Initialize (AT91S_ADC12B *pAdc,
     unsigned int startup;
     unsigned int shtim;
 
-    ASSERT(startupTime<=ADC_STARTUP_TIME_MAX, "ADC Bad startupTime\n\r");
-    ASSERT(sampleAndHoldTime>=ADC_TRACK_HOLD_TIME_MIN, "ADC Bad sampleAndHoldTime\n\r");
+    ASSERT(startupTime<=ADC_STARTUP_TIME_MAX, "ADC Bad startupTime\r\n");
+    ASSERT(sampleAndHoldTime>=ADC_TRACK_HOLD_TIME_MIN, "ADC Bad sampleAndHoldTime\r\n");
 
     // Example:
     // 5 MHz operation, 20µs startup time, 600ns track and hold time
@@ -89,15 +89,15 @@ void ADC12_Initialize (AT91S_ADC12B *pAdc,
     startup = ((adcClock/1000000) * startupTime / 8) - 1;
     shtim = (((adcClock/1000000) * sampleAndHoldTime)/1000);
 
-    ASSERT( (prescal<0x3F), "ADC Bad PRESCAL\n\r");
-    ASSERT(startup<0x7F, "ADC Bad STARTUP\n\r");
-    ASSERT(shtim<0xF, "ADC Bad SampleAndHoldTime\n\r");
+    ASSERT( (prescal<0x3F), "ADC Bad PRESCAL\r\n");
+    ASSERT(startup<0x7F, "ADC Bad STARTUP\r\n");
+    ASSERT(shtim<0xF, "ADC Bad SampleAndHoldTime\r\n");
 
-    TRACE_DEBUG("adcClock:%d MasterClock:%d\n\r", (mckClock/((prescal+1)*2)), mckClock);
-    TRACE_DEBUG("prescal:0x%X startup:0x%X shtim:0x%X\n\r", prescal, startup, shtim);
+    TRACE_DEBUG("adcClock:%d MasterClock:%d\r\n", (mckClock/((prescal+1)*2)), mckClock);
+    TRACE_DEBUG("prescal:0x%X startup:0x%X shtim:0x%X\r\n", prescal, startup, shtim);
     
     if( adcClock != (mckClock/((prescal+1)*2)) ) {
-        TRACE_WARNING("User and calculated adcClocks are different : user=%d calc=%d\n\r", 
+        TRACE_WARNING("User and calculated adcClocks are different : user=%d calc=%d\r\n", 
             adcClock, (mckClock/((prescal+1)*2)));
     }
 

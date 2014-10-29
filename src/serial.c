@@ -82,12 +82,12 @@ static void ISR_Vbus(const Pin *pPin)
     // Check current level on VBus
     if (PIO_Get(&pinVbus)) {
 
-        //TRACE_INFO("VBUS conn\n\r");
+        //TRACE_INFO("VBUS conn\r\n");
         USBD_Connect();
     }
     else {
 
-        //TRACE_INFO("VBUS discon\n\r");
+        //TRACE_INFO("VBUS discon\r\n");
         USBD_Disconnect();
     }
 }
@@ -188,7 +188,7 @@ static void UsbDataReceived(unsigned int unused,
     {
         puts("UsbDataReceived: Transfer error\r");
         
-        //  TRACE_WARNING( "UsbDataReceived: Transfer error\n\r");
+        //  TRACE_WARNING( "UsbDataReceived: Transfer error\r\n");
     }
 }
 //volatile int busyflag=0;
@@ -250,9 +250,9 @@ void usb_printf(const char * format, ...)
 void samserial_init()
 {
     //TRACE_CONFIGURE(DBGU_STANDARD, 115200, BOARD_MCK);
-//    printf("-- USB Device CDC Serial Project %s --\n\r", SOFTPACK_VERSION);
-//    printf("-- %s\n\r", BOARD_NAME);
-//    printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
+//    printf("-- USB Device CDC Serial Project %s --\r\n", SOFTPACK_VERSION);
+//    printf("-- %s\r\n", BOARD_NAME);
+//    printf("-- Compiled: %s %s --\r\n", __DATE__, __TIME__);
     // If they are present, configure Vbus & Wake-up pins
     PIO_InitializeInterrupts(0);
 

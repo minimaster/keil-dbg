@@ -39,7 +39,7 @@
 // X, Y, Z, E steps per unit
 #define _AXIS_STEP_PER_UNIT {160, 160, 6400/0.8, 1095 }
 
-#define _AXIS_CURRENT {192, 192, 245, 192, 192}
+#define _AXIS_CURRENT {192, 192, 224, 192, 192}
 #define _AXIS_USTEP {3, 3, 3, 3, 3}
 
 //-----------------------------------------------------------------------
@@ -77,7 +77,7 @@
 
 #define _DISABLE_X_EN 	false
 #define _DISABLE_Y_EN 	false
-#define _DISABLE_Z_EN 	false
+#define _DISABLE_Z_EN 	true
 #define _DISABLE_E_EN 	false
 
 //-----------------------------------------------------------------------

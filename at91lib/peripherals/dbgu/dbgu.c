@@ -88,7 +88,7 @@ void DBGU_PutChar(unsigned char c)
     AT91C_BASE_DBGU->DBGU_THR = c;
     
     // Wait for the transfer to complete
-    while ((AT91C_BASE_DBGU->DBGU_CSR & AT91C_US_TXEMPTY) == 0);
+    // while ((AT91C_BASE_DBGU->DBGU_CSR & AT91C_US_TXEMPTY) == 0);
 }
 
 //------------------------------------------------------------------------------

@@ -93,7 +93,7 @@ static void ComputeLockRange(
     // Store actual page numbers
     EFC_ComputeAddress(pStartEfc, actualStartPage, 0, pActualStart);
     EFC_ComputeAddress(pEndEfc, actualEndPage, 0, pActualEnd);
-    TRACE_DEBUG("Actual lock range is 0x%06X - 0x%06X\n\r", *pActualStart, *pActualEnd);
+    TRACE_DEBUG("Actual lock range is 0x%06X - 0x%06X\r\n", *pActualStart, *pActualEnd);
 }
 
 //------------------------------------------------------------------------------
@@ -381,7 +381,7 @@ unsigned char FLASHD_IsLocked(unsigned int start, unsigned int end)
     
     // Retrieve lock status
     error = EFC_PerformCommand(pEfc, AT91C_EFC_FCMD_GLB, 0);
-    ASSERT(!error, "-F- Error while trying to fetch lock bits status (0x%02X)\n\r", error);
+    ASSERT(!error, "-F- Error while trying to fetch lock bits status (0x%02X)\r\n", error);
     status = EFC_GetResult(pEfc);
     
     // Check status of each involved region
@@ -410,7 +410,7 @@ unsigned char FLASHD_IsGPNVMSet(unsigned char gpnvm)
     
     // Get GPNVMs status
     error = EFC_PerformCommand(AT91C_BASE_EFC, AT91C_EFC_FCMD_GFB, 0);
-    ASSERT(!error, "-F- Error while trying to fetch GPNVMs status (0x%02X)\n\r", error);
+    ASSERT(!error, "-F- Error while trying to fetch GPNVMs status (0x%02X)\r\n", error);
     status = EFC_GetResult(AT91C_BASE_EFC);
     
     // Check if GPNVM is set
