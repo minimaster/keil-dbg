@@ -797,7 +797,8 @@ static int gcode_process_command()
 
 						PID_autotune(heater, help_temp);
 					}
-					return NO_REPLY;
+					//return NO_REPLY;
+					break;
 				}
 				case 304: // M304 Evaluate heater performance
 				{
@@ -812,7 +813,8 @@ static int gcode_process_command()
 
 						Heater_Eval(heater, step);
 					}
-					return NO_REPLY;
+					//return NO_REPLY;
+					break;
 				}
 				case 400: // M400 finish all moves
 				{
