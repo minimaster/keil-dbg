@@ -67,69 +67,65 @@ extern WEAK void SVC_Handler( void );
 extern WEAK void DebugMon_Handler( void );
 extern WEAK void PendSV_Handler( void );
 extern WEAK void SysTick_Handler( void );
-void IrqHandlerNotUsed(void);
 
-
-// System Controller
-extern void SYS_IrqHandler(void);
 // SUPPLY CONTROLLER
-extern WEAK void SUPC_IrqHandler(void);
+extern WEAK void SUPC_IRQHandler(void);
 // RESET CONTROLLER
-extern WEAK void RSTC_IrqHandler(void);
+extern WEAK void RSTC_IRQHandler(void);
 // REAL TIME CLOCK
-extern WEAK void RTC_IrqHandler(void);
+extern WEAK void RTC_IRQHandler(void);
 // REAL TIME TIMER
-extern WEAK void RTT_IrqHandler(void);
+extern WEAK void RTT_IRQHandler(void);
 // WATCHDOG TIMER
-extern WEAK void WDT_IrqHandler(void);
+extern WEAK void WDT_IRQHandler(void);
 // PMC
-extern WEAK void PMC_IrqHandler(void);
+extern WEAK void PMC_IRQHandler(void);
 // EFC0
-extern WEAK void EFC0_IrqHandler(void);
+extern WEAK void EFC0_IRQHandler(void);
 // EFC1
-extern WEAK void EFC1_IrqHandler(void);
+extern WEAK void EFC1_IRQHandler(void);
 // DBGU
-extern WEAK void DBGU_IrqHandler(void);
+extern WEAK void UART_IRQHandler(void);
 // HSMC4
-extern WEAK void HSMC4_IrqHandler(void);
+extern WEAK void SMCI_IRQHandler(void);
 // Parallel IO Controller A
-extern WEAK void PIOA_IrqHandler(void);
+extern WEAK void PIOA_IRQHandler(void);
 // Parallel IO Controller B
-extern WEAK void PIOB_IrqHandler(void);
+extern WEAK void PIOB_IRQHandler(void);
 // Parallel IO Controller C
-extern WEAK void PIOC_IrqHandler(void);
+extern WEAK void PIOC_IRQHandler(void);
 // USART 0
-extern WEAK void USART0_IrqHandler(void);
+extern WEAK void USART0_IRQHandler(void);
 // USART 1
-extern WEAK void USART1_IrqHandler(void);
+extern WEAK void USART1_IRQHandler(void);
 // USART 2
-extern WEAK void USART2_IrqHandler(void);
+extern WEAK void USART2_IRQHandler(void);
 // USART 3
-extern WEAK void USART3_IrqHandler(void);
+extern WEAK void USART3_IRQHandler(void);
 // Multimedia Card Interface
-extern WEAK void MCI0_IrqHandler(void);
+extern WEAK void HSMCI_IRQHandler(void);
 // TWI 0
-extern WEAK void TWI0_IrqHandler(void);
+extern WEAK void TWI0_IRQHandler(void);
 // TWI 1
-extern WEAK void TWI1_IrqHandler(void);
+extern WEAK void TWI1_IRQHandler(void);
 // Serial Peripheral Interface 0
-extern WEAK void SPI0_IrqHandler(void);
+extern WEAK void SPI_IRQHandler(void);
 // Serial Synchronous Controller 0
-extern WEAK void SSC0_IrqHandler(void);
+extern WEAK void SSC_IRQHandler(void);
 // Timer Counter 0
-extern WEAK void TC0_IrqHandler(void);
+extern WEAK void TC0_IRQHandler(void);
 // Timer Counter 1
-extern WEAK void TC1_IrqHandler(void);
+extern WEAK void TC1_IRQHandler(void);
 // Timer Counter 2
-extern WEAK void TC2_IrqHandler(void);
+extern WEAK void TC2_IRQHandler(void);
 // PWM Controller
-extern WEAK void PWM_IrqHandler(void);
+extern WEAK void PWM_IRQHandler(void);
 // ADC controller0
-extern WEAK void ADCC0_IrqHandler(void);
+extern WEAK void ADC12B_IRQHandler(void);
 // ADC controller1
-extern WEAK void ADCC1_IrqHandler(void);
+extern WEAK void ADC_IRQHandler(void);
 // HDMA
-extern WEAK void HDMA_IrqHandler(void);
+extern WEAK void DMAC_IRQHandler(void);
 // USB Device High Speed UDP_HS
-extern WEAK void UDPD_IrqHandler(void);
+extern WEAK void UDPD_IRQHandler(void);
 

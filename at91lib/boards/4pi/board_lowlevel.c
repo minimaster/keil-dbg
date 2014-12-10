@@ -45,7 +45,6 @@
 //------------------------------------------------------------------------------
 
 #include "board.h"
-#include "board_memories.h"
 #include "board_lowlevel.h"
 #include <pio/pio.h>
 
@@ -136,7 +135,7 @@ void LowLevelInit(void)
     /* Switch to 3-20MHz Xtal oscillator */
     AT91C_BASE_PMC->PMC_MOR = (0x37 << 16) | BOARD_OSCOUNT | AT91C_CKGR_MOSCRCEN | AT91C_CKGR_MOSCXTEN | AT91C_CKGR_MOSCSEL;
     timeout = 0;
-    while (!(AT91C_BASE_PMC->PMC_SR & AT91C_PMC_MOSCSELS) && (timeout++ < CLOCK_TIMEOUT));
+    //while (!(AT91C_BASE_PMC->PMC_SR & AT91C_PMC_MOSCSELS) && (timeout++ < CLOCK_TIMEOUT));
     AT91C_BASE_PMC->PMC_MCKR = (AT91C_BASE_PMC->PMC_MCKR & ~AT91C_PMC_CSS) | AT91C_PMC_CSS_MAIN_CLK;
     timeout = 0;
     while (!(AT91C_BASE_PMC->PMC_SR & AT91C_PMC_MCKRDY) && (timeout++ < CLOCK_TIMEOUT));

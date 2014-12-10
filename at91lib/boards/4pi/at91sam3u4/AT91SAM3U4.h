@@ -515,7 +515,7 @@ typedef struct _AT91S_HSMC4_CS {
 #define AT91C_HSMC4_TRR       (0xF << 16) // (HSMC4_CS) Ready to REN low delay
 #define AT91C_HSMC4_TWB       (0xF << 24) // (HSMC4_CS) WEN high to REN to busy
 #define AT91C_HSMC4_RBNSEL    (0x7 << 28) // (HSMC4_CS) Ready/Busy Line Selection
-#define AT91C_HSMC4_NFSEL     (0x1 << 31) // (HSMC4_CS) Nand Flash Selection
+#define AT91C_HSMC4_NFSEL     (0x1u << 31) // (HSMC4_CS) Nand Flash Selection
 // -------- HSMC4_MODE : (HSMC4_CS Offset: 0x10) HSMC4 MODE -------- 
 #define AT91C_HSMC4_READ_MODE (0x1 <<  0) // (HSMC4_CS) Read Mode
 #define AT91C_HSMC4_WRITE_MODE (0x1 <<  1) // (HSMC4_CS) Write Mode
@@ -3162,7 +3162,7 @@ typedef struct _AT91S_MCI {
 #define AT91C_MCI_PDCMODE     (0x1 << 15) // (MCI) PDC Oriented Mode
 #define 	AT91C_MCI_PDCMODE_DISABLE              (0x0 << 15) // (MCI) Disables PDC Transfer
 #define 	AT91C_MCI_PDCMODE_ENABLE               (0x1 << 15) // (MCI) Enables PDC Transfer
-#define AT91C_MCI_BLKLEN      (0xFFFF << 16) // (MCI) Data Block Length
+#define AT91C_MCI_BLKLEN      (0xFFFFu << 16) // (MCI) Data Block Length
 // -------- MCI_DTOR : (MCI Offset: 0x8) MCI Data Timeout Register -------- 
 #define AT91C_MCI_DTOCYC      (0xF <<  0) // (MCI) Data Timeout Cycle Number
 #define AT91C_MCI_DTOMUL      (0x7 <<  4) // (MCI) Data Timeout Multiplier
@@ -3267,7 +3267,7 @@ typedef struct _AT91S_MCI {
 #define AT91C_MCI_FIFOEMPTY   (0x1 << 26) // (MCI) FIFO Empty flag
 #define AT91C_MCI_XFRDONE     (0x1 << 27) // (MCI) Transfer Done flag
 #define AT91C_MCI_OVRE        (0x1 << 30) // (MCI) Overrun flag
-#define AT91C_MCI_UNRE        (0x1 << 31) // (MCI) Underrun flag
+#define AT91C_MCI_UNRE        (0x1u << 31) // (MCI) Underrun flag
 // -------- MCI_IER : (MCI Offset: 0x44) MCI Interrupt Enable Register -------- 
 // -------- MCI_IDR : (MCI Offset: 0x48) MCI Interrupt Disable Register -------- 
 // -------- MCI_IMR : (MCI Offset: 0x4c) MCI Interrupt Mask Register -------- 
@@ -4684,7 +4684,7 @@ typedef struct _AT91S_UDPHS_EPT {
 #define 	AT91C_UDPHS_BK_NUMBER_2                    (0x2 <<  6) // (UDPHS_EPT) Double bank (Ping-Pong : Bank0 / Bank1)
 #define 	AT91C_UDPHS_BK_NUMBER_3                    (0x3 <<  6) // (UDPHS_EPT) Triple Bank (Bank0 / Bank1 / Bank2) (if possible)
 #define AT91C_UDPHS_NB_TRANS  (0x3 <<  8) // (UDPHS_EPT) Number Of Transaction per Micro-Frame (High-Bandwidth iso only)
-#define AT91C_UDPHS_EPT_MAPD  (0x1 << 31) // (UDPHS_EPT) Endpoint Mapped (read only
+#define AT91C_UDPHS_EPT_MAPD  (0x1u << 31) // (UDPHS_EPT) Endpoint Mapped (read only
 // -------- UDPHS_EPTCTLENB : (UDPHS_EPT Offset: 0x4) UDPHS Endpoint Control Enable Register -------- 
 #define AT91C_UDPHS_EPT_ENABL (0x1 <<  0) // (UDPHS_EPT) Endpoint Enable
 #define AT91C_UDPHS_AUTO_VALID (0x1 <<  1) // (UDPHS_EPT) Packet Auto-Valid Enable/Disable
@@ -4704,7 +4704,7 @@ typedef struct _AT91S_UDPHS_EPT {
 #define AT91C_UDPHS_NAK_IN    (0x1 << 14) // (UDPHS_EPT) NAKIN ERROR FLUSH / Clear / Interrupt Enable/Disable
 #define AT91C_UDPHS_NAK_OUT   (0x1 << 15) // (UDPHS_EPT) NAKOUT / Clear / Interrupt Enable/Disable
 #define AT91C_UDPHS_BUSY_BANK (0x1 << 18) // (UDPHS_EPT) Busy Bank Interrupt Enable/Disable
-#define AT91C_UDPHS_SHRT_PCKT (0x1 << 31) // (UDPHS_EPT) Short Packet / Interrupt Enable/Disable
+#define AT91C_UDPHS_SHRT_PCKT (0x1u << 31) // (UDPHS_EPT) Short Packet / Interrupt Enable/Disable
 // -------- UDPHS_EPTCTLDIS : (UDPHS_EPT Offset: 0x8) UDPHS Endpoint Control Disable Register -------- 
 #define AT91C_UDPHS_EPT_DISABL (0x1 <<  0) // (UDPHS_EPT) Endpoint Disable
 // -------- UDPHS_EPTCTL : (UDPHS_EPT Offset: 0xc) UDPHS Endpoint Control Register -------- 
@@ -4772,7 +4772,7 @@ typedef struct _AT91S_UDPHS_DMA {
 #define AT91C_UDPHS_END_TR_ST (0x1 <<  4) // (UDPHS_DMA) 
 #define AT91C_UDPHS_END_BF_ST (0x1 <<  5) // (UDPHS_DMA) 
 #define AT91C_UDPHS_DESC_LDST (0x1 <<  6) // (UDPHS_DMA) 
-#define AT91C_UDPHS_BUFF_COUNT (0xFFFF << 16) // (UDPHS_DMA) 
+#define AT91C_UDPHS_BUFF_COUNT (0xFFFFu << 16) // (UDPHS_DMA) 
 
 // *****************************************************************************
 //              SOFTWARE API DEFINITION  FOR UDPHS High Speed Device Interface

@@ -33,8 +33,8 @@
 #include <pio/pio_it.h>
 #include <irq/irq.h>
 //#include <utility/trace.h>
-#include <usb/device/cdc-serial/CDCDSerialDriver.h>
-#include <usb/device/cdc-serial/CDCDSerialDriverDescriptors.h>
+//#include <usb/device/cdc-serial/CDCDSerialDriver.h>
+//#include <usb/device/cdc-serial/CDCDSerialDriverDescriptors.h>
 //#include <pmc/pmc.h>
 #include <stdio.h>
 #include <string.h>
@@ -47,27 +47,27 @@
 //------------------------------------------------------------------------------
 
 /// Size in bytes of the buffer used for reading data from the USB & USART
-#define DATABUFFERSIZE \
-    BOARD_USB_ENDPOINTS_MAXPACKETSIZE(CDCDSerialDriverDescriptors_DATAIN)
+//#define DATABUFFERSIZE \x
+//    BOARD_USB_ENDPOINTS_MAXPACKETSIZE(CDCDSerialDriverDescriptors_DATAIN)
 
 /// Use for power management
-#define STATE_IDLE    0
+//#define STATE_IDLE    0
 /// The USB device is in suspend state
-#define STATE_SUSPEND 4
+//#define STATE_SUSPEND 4
 /// The USB device is in resume state
-#define STATE_RESUME  5
+//#define STATE_RESUME  5
 
 /// State of USB, for suspend and resume
-unsigned char USBState = STATE_IDLE;
+//unsigned char USBState = STATE_IDLE;
 
 //static unsigned char sendBuffer[DATABUFFERSIZE];
 /// Buffer for storing incoming USB data.
-static unsigned char usbBuffer[DATABUFFERSIZE];
-unsigned char isSerialConnected = 0;
+//static unsigned char usbBuffer[DATABUFFERSIZE];
+//unsigned char isSerialConnected = 0;
 //------------------------------------------------------------------------------
 //         VBus monitoring (optional)
 //------------------------------------------------------------------------------
-#if defined(PIN_USB_VBUS)
+#if 0 // defined(PIN_USB_VBUS)
 
 #define VBUS_CONFIGURE()  VBus_Configure()
 
@@ -137,110 +137,111 @@ void NormalPowerMode(void){}
 /// Invoked when the USB device leaves the Suspended state. By default,
 /// configures the LEDs.
 //------------------------------------------------------------------------------
-void USBDCallbacks_Resumed(void)
-{
-    USBState = STATE_RESUME;
-}
+//void USBDCallbacks_Resumed(void)
+//{
+//    USBState = STATE_RESUME;
+//}
 
 //------------------------------------------------------------------------------
 /// Invoked when the USB device gets suspended. By default, turns off all LEDs.
 //------------------------------------------------------------------------------
-void USBDCallbacks_Suspended(void)
-{
+//void USBDCallbacks_Suspended(void)
+//{
     // Turn off LEDs
-    USBState = STATE_SUSPEND;
-}
+//    USBState = STATE_SUSPEND;
+//}
 
-static void (*callback)(unsigned char)=0;
+//static void (*callback)(unsigned char)=0;
 
-void samserial_setcallback(void (*c)(unsigned char)){
-	callback=c;
+void samserial_setcallback(void (*c)(unsigned char))
+{
+//	callback=c;
 }
 
 //------------------------------------------------------------------------------
 /// Callback invoked when data has been received on the USB.
 //------------------------------------------------------------------------------
-static void UsbDataReceived(unsigned int unused,
-                            unsigned char status,
-                            unsigned int received,
-                            unsigned int remaining)
-{
-    // Check that data has been received successfully
-    
-    if (status == USBD_STATUS_SUCCESS)
-    {
-        int i=0;
-        if (callback)
-        {
-            //printf("calling callback\r\n");
-            for(i=0;i<received;++i)
-            {
-                //printf("calling callback with %c\r\n",usbBuffer[i]);
-                callback(usbBuffer[i]);
-            }
-            CDCDSerialDriver_Read(usbBuffer,
-                                  DATABUFFERSIZE,
-                                  (TransferCallback) UsbDataReceived,
-                                  0);
-        }
-    }
-    else
-    {
-        puts("UsbDataReceived: Transfer error\r");
-        
-        //  TRACE_WARNING( "UsbDataReceived: Transfer error\r\n");
-    }
-}
+//static void UsbDataReceived(unsigned int unused,
+//                            unsigned char status,
+//                            unsigned int received,
+//                            unsigned int remaining)
+//{
+//     // Check that data has been received successfully
+//     
+//     if (status == USBD_STATUS_SUCCESS)
+//     {
+//         int i=0;
+//         if (callback)
+//         {
+//             //printf("calling callback\r\n");
+//             for(i=0;i<received;++i)
+//             {
+//                 //printf("calling callback with %c\r\n",usbBuffer[i]);
+//                 callback(usbBuffer[i]);
+//             }
+//             CDCDSerialDriver_Read(usbBuffer,
+//                                   DATABUFFERSIZE,
+//                                   (TransferCallback) UsbDataReceived,
+//                                   0);
+//         }
+//     }
+//     else
+//     {
+//         puts("UsbDataReceived: Transfer error\r");
+//         
+//         //  TRACE_WARNING( "UsbDataReceived: Transfer error\r\n");
+//     }
+//}
 //volatile int busyflag=0;
 //volatile char _samserial_buffer[128];
-void samserial_print(const char* c)
-{
-	usb_printf(c);
-}
+//void samserial_print(const char* c)
+//{
+//	usb_printf(c);
+//}
 
 volatile char bufferInUse = 0;
 char printBuffer[256];
 
-static void UsbWriteCompleted(void* pArg,
-                            unsigned char status,
-                            unsigned int received,
-                            unsigned int remaining)
-{
-	bufferInUse = 0;
-}
+// static void UsbWriteCompleted(void* pArg,
+//                             unsigned char status,
+//                             unsigned int received,
+//                             unsigned int remaining)
+// {
+// 	bufferInUse = 0;
+// }
 
 void usb_printf(const char * format, ...)
 {
-	if (!isSerialConnected)
-		return;
-    
-    if (USBState == STATE_SUSPEND)
-        return;
-	
-	unsigned int timeout=1000;
-	while(bufferInUse && timeout--)
-	{
-		delay_ms(1);
-	}
-	
-	if (bufferInUse)
-	{
-		printf("usb_printf timeout\r\n");
-		return;
-	}
-	
-	unsigned int str_len = 0;
-	va_list args;
-	va_start (args, format);
-	str_len = vsprintf (printBuffer,format, args);
-	va_end (args);
+// 	if (!isSerialConnected)
+// 		return;
+//     
+//     if (USBState == STATE_SUSPEND)
+//         return;
+// 	
+// 	unsigned int timeout=1000;
+// 	while(bufferInUse && timeout--)
+// 	{
+// 		delay_ms(1);
+// 	}
+// 	
+// 	if (bufferInUse)
+// 	{
+// 		printf("usb_printf timeout\r\n");
+// 		return;
+// 	}
+// 	
+// 	unsigned int str_len = 0;
+// 	va_list args;
+// 	va_start (args, format);
+// 	str_len = vsprintf (printBuffer,format, args);
+// 	va_end (args);
 
-	bufferInUse = 1; 
-	if(CDCDSerialDriver_Write((void *)printBuffer,str_len, UsbWriteCompleted, 0)!= USBD_STATUS_SUCCESS)
-	{		
-		printf("USB FAIL\r\n");
-		bufferInUse = 0;
-	}
+// 	bufferInUse = 1; 
+// 	if(CDCDSerialDriver_Write((void *)printBuffer,str_len, UsbWriteCompleted, 0)!= USBD_STATUS_SUCCESS)
+// 	{		
+// 		printf("USB FAIL\r\n");
+// 		bufferInUse = 0;
+// 	}
 }
 
 
@@ -257,21 +258,21 @@ void samserial_init()
     PIO_InitializeInterrupts(0);
 
 
-    CDCDSerialDriver_Initialize();
+    //CDCDSerialDriver_Initialize();
 
     // connect if needed
-    VBUS_CONFIGURE();
+    //VBUS_CONFIGURE();
     // Connect pull-up, wait for configuration
-    USBD_Connect();
+    //USBD_Connect();
     
     // Driver loop
-        while (USBD_GetState() < USBD_STATE_CONFIGURED) {
-            if (isSerialConnected)
-                isSerialConnected = 0;
-        }
-        isSerialConnected = 1;
+    //    while (USBD_GetState() < USBD_STATE_CONFIGURED) {
+    //        if (isSerialConnected)
+    //            isSerialConnected = 0;
+    //    }
+    //    isSerialConnected = 1;
         // Start receiving data on the USB
-        CDCDSerialDriver_Read(usbBuffer,DATABUFFERSIZE,(TransferCallback) UsbDataReceived,0);
+    //    CDCDSerialDriver_Read(usbBuffer,DATABUFFERSIZE,(TransferCallback) UsbDataReceived,0);
        
 }
 

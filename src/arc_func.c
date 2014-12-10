@@ -141,7 +141,4 @@ void mc_arc(float *position, float *target, float *offset, unsigned char axis_0,
   // Ensure last segment arrives at target location.
   plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], feed_rate, extruder);
 
- }
-
-
- 
+}

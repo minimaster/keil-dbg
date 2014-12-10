@@ -84,7 +84,7 @@ signed short temp2analog_thermistor_table(signed short celsius, const short tabl
 signed short analog2temp_thermistor_table(signed short raw,const short table[][2], signed short numtemps);
 
 
-#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
+#define constrain(amt,low,high) ((amt)<=(low)?(low):((amt)>(high)?(high):(amt)))
 #define min(a,b) ((a)<(b)?(a):(b))
 #define max(a,b) ((a)>(b)?(a):(b))
 

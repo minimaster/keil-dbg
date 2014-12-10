@@ -84,31 +84,31 @@ typedef struct {
 
 
 void manage_inactivity(char debug);
-void get_coordinates();
-void prepare_move();
+void get_coordinates(void);
+void prepare_move(void);
 void prepare_arc_move(char isclockwise);
-void get_arc_coordinates();
+void get_arc_coordinates(void);
 
 
-void process_commands();
-void get_arc_coordinates();
+void process_commands(void);
+void get_arc_coordinates(void);
 
 void kill(char debug);
 
 void homing_routine(unsigned char axis);
 
-void check_axes_activity();
-void plan_init();
-void st_init();
-void tp_init();
+void check_axes_activity(void);
+void plan_init(void);
+void st_init(void);
+void tp_init(void);
 void plan_buffer_line(float x, float y, float z, float e, float feed_rate, unsigned char extruder);
 void plan_set_position(float x, float y, float z, float e);
-void st_wake_up();
-void st_synchronize();
+void st_wake_up(void);
+void st_synchronize(void);
 void st_set_position(long x, long y, long z, long e);
-void st_synchronize();
-void plan_discard_current_block();
-block_t *plan_get_current_block();
+void st_synchronize(void);
+void plan_discard_current_block(void);
+block_t *plan_get_current_block(void);
 
 
 extern char axis_relative_modes[];

@@ -429,7 +429,7 @@ void PIO_DisableIt(const Pin *pPin)
 //------------------------------------------------------------------------------
 /// Override cortex-m3's default PIOA irq handler
 //------------------------------------------------------------------------------
-void PIOA_IrqHandler(void)
+void PIOA_IRQHandler(void)
 {
     #if defined(AT91C_ID_PIOA)
     // Treat PIOA interrupts
@@ -440,7 +440,7 @@ void PIOA_IrqHandler(void)
 //------------------------------------------------------------------------------
 /// Override cortex-m3's default PIOB irq handler
 //------------------------------------------------------------------------------
-void PIOB_IrqHandler(void)
+void PIOB_IRQHandler(void)
 {
     #if defined(AT91C_ID_PIOB)
     // Treat PIOA interrupts
@@ -451,7 +451,7 @@ void PIOB_IrqHandler(void)
 //------------------------------------------------------------------------------
 /// Override cortex-m3's default PIOC irq handler
 //------------------------------------------------------------------------------
-void PIOC_IrqHandler(void)
+void PIOC_IRQHandler(void)
 {
     #if defined(AT91C_ID_PIOC)
     // Treat PIOA interrupts

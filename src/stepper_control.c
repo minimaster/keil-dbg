@@ -40,7 +40,7 @@
 #include "motoropts.h"
 
 //INIT the Stepper Interrupt
-void TC0_IrqHandler(void);
+void TC0_IRQHandler(void);
 
 //Time messure with IO Pins
 const Pin time_check1={1 <<  24, AT91C_BASE_PIOB, AT91C_ID_PIOB, PIO_OUTPUT_0, PIO_PULLUP};
@@ -100,9 +100,9 @@ volatile long acceleration_time, deceleration_time;
 volatile unsigned short acc_step_rate; 	// needed for deceleration start point
 volatile unsigned short TC_RC_nominal;
 
-volatile volatile unsigned char endstop_x_hit=0;
-volatile volatile unsigned char endstop_y_hit=0;
-volatile volatile unsigned char endstop_z_hit=0;
+volatile unsigned char endstop_x_hit=0;
+volatile unsigned char endstop_y_hit=0;
+volatile unsigned char endstop_z_hit=0;
 
 volatile unsigned char old_x_min_endstop=0;
 volatile unsigned char old_x_max_endstop=0;
@@ -140,7 +140,7 @@ void ConfigureTc0_Stepper(void)
     AT91C_BASE_TC0->TC_RC = (BOARD_MCK / 128) / freq; // timerFreq / desiredFreq
 
     // Configure and enable interrupt on RC compare
-    IRQ_ConfigureIT(AT91C_ID_TC0, 0, TC0_IrqHandler);
+    IRQ_ConfigureIT(AT91C_ID_TC0, 0, TC0_IRQHandler);
     
 	//AT91C_BASE_TC0->TC_IER = AT91C_TC_CPCS|AT91C_TC_CPBS;
 	AT91C_BASE_TC0->TC_IER = AT91C_TC_CPCS;
@@ -215,7 +215,7 @@ void trapezoid_generator_reset()
 //------------------------------------------------------------------------------
 /// Interrupt handler for TC0 interrupt --> Stepper.
 //------------------------------------------------------------------------------
-void TC0_IrqHandler(void)
+void TC0_IRQHandler(void)
 {        
 	volatile unsigned int dummy;
 	

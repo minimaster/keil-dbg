@@ -73,7 +73,8 @@ void ResetException(void);
 //         Exception Table
 //------------------------------------------------------------------------------
 
-__attribute__((section(".vectors")))
+//__attribute__((section(".vectors")))
+__attribute__((section("RESET")))
 IntFunc exception_table[] = {
 
     // Configure Initial Stack Pointer, using linker-generated symbols

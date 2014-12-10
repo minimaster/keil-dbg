@@ -16,24 +16,23 @@
 #include "stepper_control.h"
 #include "planner.h"
 #include "gcode_parser.h"
-#include "sdcard.h"
-//#include "heaters.h"
+#include "board_lowlevel.h"
 
 
 //--------------------------
 // EXTERN FUNCTIONS
 //--------------------------
-extern void adc_sample();
-extern void samserial_init();
+extern void adc_sample(void);
+extern void samserial_init(void);
 
-extern void motor_setup();
+extern void motor_setup(void);
 extern void motor_setopts(unsigned char axis, unsigned char ustepbits, unsigned char current);
 extern void motor_enaxis(unsigned char axis, unsigned char en);
 extern void motor_setdir(unsigned char axis, unsigned char dir);
 extern void motor_step(unsigned char axis);
-extern void motor_unstep();
+extern void motor_unstep(void);
 
-extern void heaters_setup();
+extern void heaters_setup(void);
 extern void manage_heaters(void);
 //extern void heater_soft_pwm(void);
 extern void ConfigureTc_1(void);
@@ -85,23 +84,13 @@ void SysTick_Handler(void)
     }
 	    
 }
-unsigned long oldtimestamp=1;
-void do_periodic()
-{
-	if (timestamp==oldtimestamp)
-		return;
-	oldtimestamp=timestamp;
-	if (timestamp % 500 == 0)
-	{
-		sdcard_handle_state();
-	}
-	
-}
+
 
 
 int main()
 {
-	
+	LowLevelInit();
+    
     TRACE_CONFIGURE(DBGU_STANDARD, 115200, BOARD_MCK);
     printf("-- %s\r\n", BOARD_NAME);
     printf("-- Compiled: %s %s --\r\n", __DATE__, __TIME__);
@@ -113,12 +102,8 @@ int main()
 	printf("INIT Parameters\r\n");
 	init_parameters();
 	
-	//-------- Load parameters from Flash --------------
-	printf("Load parameters from Flash\r\n");
-	FLASH_LoadSettings();
-	
     //-------- Init UART --------------
-	printf("USB Seriel INIT\r\n");
+	printf("USB Serial INIT\r\n");
 	samserial_init();
 	
 	//-------- Init ADC without Autostart --------------
@@ -165,29 +150,7 @@ int main()
 	printf("Main loop\r\n");
 	while (1)
 	{
-  		//uncomment to use//sprinter_mainloop();
-    	//main loop events go here
-
-		do_periodic();
-
-		gcode_update();
-/*    	
-		if(buflen < (BUFSIZE-1))
-			get_command();
-
-    	if(buflen > 0)
-		{
-			
-			//-------- Check and execute G-CODE --------------
-			process_commands();
-
-			//-------- Increment G-Code FIFO  --------------
-			buflen = (buflen-1);
-			bufindr++;
-			if(bufindr == BUFSIZE) bufindr = 0;
-			
-		}
-*/		  
+		gcode_update();  
     }
 }
 
@@ -202,7 +165,7 @@ int main()
 #define WEAK
 #define FAIL() printf("%s()\r\n", __func__)
 
-
+#if 0
 extern unsigned int _estack;
 
 struct backtrace_frame_t
@@ -249,7 +212,9 @@ int backtrace(void ** array, int size)
 
     return frame_count;
 }
-
+#else
+#define backtrace(array, size) 0
+#endif
 //------------------------------------------------------------------------------
 // Default irq handler
 //------------------------------------------------------------------------------
@@ -359,19 +324,9 @@ WEAK void PendSV_Handler(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-// for SAM7/9
-//------------------------------------------------------------------------------
-void SYS_IrqHandler( void )
-{
-	FAIL();
-    while(1);
-}
-
-
-//------------------------------------------------------------------------------
 // SUPPLY CONTROLLER
 //------------------------------------------------------------------------------
-WEAK void SUPC_IrqHandler(void)
+WEAK void SUPC_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -380,7 +335,7 @@ WEAK void SUPC_IrqHandler(void)
 //------------------------------------------------------------------------------
 // RESET CONTROLLER
 //------------------------------------------------------------------------------
-WEAK void RSTC_IrqHandler(void)
+WEAK void RSTC_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -389,7 +344,7 @@ WEAK void RSTC_IrqHandler(void)
 //------------------------------------------------------------------------------
 // REAL TIME CLOCK
 //------------------------------------------------------------------------------
-WEAK void RTC_IrqHandler(void)
+WEAK void RTC_IRQHandler(void)
 {
     while(1);
 }
@@ -397,7 +352,7 @@ WEAK void RTC_IrqHandler(void)
 //------------------------------------------------------------------------------
 // REAL TIME TIMER
 //------------------------------------------------------------------------------
-WEAK void RTT_IrqHandler(void)
+WEAK void RTT_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -406,7 +361,7 @@ WEAK void RTT_IrqHandler(void)
 //------------------------------------------------------------------------------
 // WATCHDOG TIMER
 //------------------------------------------------------------------------------
-WEAK void WDT_IrqHandler(void)
+WEAK void WDT_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -415,7 +370,7 @@ WEAK void WDT_IrqHandler(void)
 //------------------------------------------------------------------------------
 // PMC
 //------------------------------------------------------------------------------
-WEAK void PMC_IrqHandler(void)
+WEAK void PMC_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -424,7 +379,7 @@ WEAK void PMC_IrqHandler(void)
 //------------------------------------------------------------------------------
 // EFC0
 //------------------------------------------------------------------------------
-WEAK void EFC0_IrqHandler(void)
+WEAK void EFC0_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -433,7 +388,7 @@ WEAK void EFC0_IrqHandler(void)
 //------------------------------------------------------------------------------
 // EFC1
 //------------------------------------------------------------------------------
-WEAK void EFC1_IrqHandler(void)
+WEAK void EFC1_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -441,7 +396,7 @@ WEAK void EFC1_IrqHandler(void)
 //------------------------------------------------------------------------------
 // DBGU
 //------------------------------------------------------------------------------
-WEAK void DBGU_IrqHandler(void)
+WEAK void UART_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -450,7 +405,7 @@ WEAK void DBGU_IrqHandler(void)
 //------------------------------------------------------------------------------
 // HSMC4
 //------------------------------------------------------------------------------
-WEAK void HSMC4_IrqHandler(void)
+WEAK void SMCI_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -459,7 +414,7 @@ WEAK void HSMC4_IrqHandler(void)
 //------------------------------------------------------------------------------
 // Parallel IO Controller A
 //------------------------------------------------------------------------------
-//WEAK void PIOA_IrqHandler(void)
+//WEAK void PIOA_IRQHandler(void)
 //{
 //	FAIL();
 //    while(1);
@@ -468,7 +423,7 @@ WEAK void HSMC4_IrqHandler(void)
 //------------------------------------------------------------------------------
 // Parallel IO Controller B
 //------------------------------------------------------------------------------
-//WEAK void PIOB_IrqHandler(void)
+//WEAK void PIOB_IRQHandler(void)
 //{
 //	FAIL();
 //    while(1);
@@ -477,7 +432,7 @@ WEAK void HSMC4_IrqHandler(void)
 //------------------------------------------------------------------------------
 // Parallel IO Controller C
 //------------------------------------------------------------------------------
-//WEAK void PIOC_IrqHandler(void)
+//WEAK void PIOC_IRQHandler(void)
 //{
 //	FAIL();
 //    while(1);
@@ -486,7 +441,7 @@ WEAK void HSMC4_IrqHandler(void)
 //------------------------------------------------------------------------------
 // USART 0
 //------------------------------------------------------------------------------
-WEAK void USART0_IrqHandler(void)
+WEAK void USART0_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -495,7 +450,7 @@ WEAK void USART0_IrqHandler(void)
 //------------------------------------------------------------------------------
 // USART 1
 //------------------------------------------------------------------------------
-WEAK void USART1_IrqHandler(void)
+WEAK void USART1_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -504,7 +459,7 @@ WEAK void USART1_IrqHandler(void)
 //------------------------------------------------------------------------------
 // USART 2
 //------------------------------------------------------------------------------
-WEAK void USART2_IrqHandler(void)
+WEAK void USART2_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -513,7 +468,7 @@ WEAK void USART2_IrqHandler(void)
 //------------------------------------------------------------------------------
 // USART 3
 //------------------------------------------------------------------------------
-WEAK void USART3_IrqHandler(void)
+WEAK void USART3_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -522,7 +477,7 @@ WEAK void USART3_IrqHandler(void)
 //------------------------------------------------------------------------------
 // Multimedia Card Interface
 //------------------------------------------------------------------------------
-//WEAK void MCI0_IrqHandler(void)
+//WEAK void HSMCI_IRQHandler(void)
 //{
 //	FAIL();
 //    while(1);
@@ -531,7 +486,7 @@ WEAK void USART3_IrqHandler(void)
 //------------------------------------------------------------------------------
 // TWI 0
 //------------------------------------------------------------------------------
-WEAK void TWI0_IrqHandler(void)
+WEAK void TWI0_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -540,7 +495,7 @@ WEAK void TWI0_IrqHandler(void)
 //------------------------------------------------------------------------------
 // TWI 1
 //------------------------------------------------------------------------------
-WEAK void TWI1_IrqHandler(void)
+WEAK void TWI1_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -549,7 +504,7 @@ WEAK void TWI1_IrqHandler(void)
 //------------------------------------------------------------------------------
 // Serial Peripheral Interface 0
 //------------------------------------------------------------------------------
-WEAK void SPI0_IrqHandler(void)
+WEAK void SPI_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -558,7 +513,7 @@ WEAK void SPI0_IrqHandler(void)
 //------------------------------------------------------------------------------
 // Serial Synchronous Controller 0
 //------------------------------------------------------------------------------
-WEAK void SSC0_IrqHandler(void)
+WEAK void SSC_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -567,7 +522,7 @@ WEAK void SSC0_IrqHandler(void)
 //------------------------------------------------------------------------------
 // Timer Counter 0
 //------------------------------------------------------------------------------
-//WEAK void TC0_IrqHandler(void)
+//WEAK void TC0_IRQHandler(void)
 //{
 //	FAIL();
 //    while(1);
@@ -576,7 +531,7 @@ WEAK void SSC0_IrqHandler(void)
 //------------------------------------------------------------------------------
 // Timer Counter 1
 //------------------------------------------------------------------------------
-//WEAK void TC1_IrqHandler(void)
+//WEAK void TC1_IRQHandler(void)
 //{
 //	FAIL();
 //    while(1);
@@ -585,7 +540,7 @@ WEAK void SSC0_IrqHandler(void)
 //------------------------------------------------------------------------------
 // Timer Counter 2
 //------------------------------------------------------------------------------
-WEAK void TC2_IrqHandler(void)
+WEAK void TC2_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -594,7 +549,7 @@ WEAK void TC2_IrqHandler(void)
 //------------------------------------------------------------------------------
 // PWM Controller
 //------------------------------------------------------------------------------
-WEAK void PWM_IrqHandler(void)
+WEAK void PWM_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -603,7 +558,7 @@ WEAK void PWM_IrqHandler(void)
 //------------------------------------------------------------------------------
 // ADC controller0
 //------------------------------------------------------------------------------
-//WEAK void ADCC0_IrqHandler(void)
+//WEAK void ADC12B_IRQHandler(void)
 //{
 //	FAIL();
 //    while(1);
@@ -612,7 +567,7 @@ WEAK void PWM_IrqHandler(void)
 //------------------------------------------------------------------------------
 // ADC controller1
 //------------------------------------------------------------------------------
-WEAK void ADCC1_IrqHandler(void)
+WEAK void ADC_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -621,7 +576,7 @@ WEAK void ADCC1_IrqHandler(void)
 //------------------------------------------------------------------------------
 // HDMA
 //------------------------------------------------------------------------------
-WEAK void HDMA_IrqHandler(void)
+WEAK void DMAC_IRQHandler(void)
 {
 	FAIL();
     while(1);
@@ -630,7 +585,7 @@ WEAK void HDMA_IrqHandler(void)
 //------------------------------------------------------------------------------
 // USB Device High Speed UDP_HS
 //------------------------------------------------------------------------------
-//WEAK void UDPD_IrqHandler(void)
+//WEAK void UDPD_IRQHandler(void)
 //{
 //	FAIL();
 //    while(1);

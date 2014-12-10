@@ -131,7 +131,6 @@ Note: M530, M531 applies to currently selected extruder.  Use T0 or T1 to select
 #include "planner.h"
 #include "stepper_control.h"
 #include "motoropts.h"
-#include "sdcard.h"
 #include "globals.h"
 
 #define BUFFER_SIZE 256
@@ -303,10 +302,6 @@ static int gcode_process_command()
 	{
 		case 'G':
 		{
-			if (sdcard_iscapturing()) {
-				sdcard_writeline(parserState.parsePos);
-				break;
-			}
 			switch(get_int('G'))
 			{
 				case 0:
@@ -399,56 +394,39 @@ static int gcode_process_command()
 		case 'M':
 		{
 			int mcode = get_int('M');
-			if (sdcard_iscapturing() && (mcode < 20 || mcode > 29)) {
-				sdcard_writeline(parserState.parsePos);
-				break;
-			}
 			switch(mcode)
 			{
+                static char selectedFile[256];
 				case 20: //list sd files
-					sdcard_listfiles();
+                    usb_printf("Begin file list\r\n");
+                    usb_printf("End file list\r\n");
 					break;
-//					return NO_REPLY;
 				case 21: //init sd card
-					sdcard_mount();
 					break;
 				case 22: //release sd card
-					sdcard_unmount();
 					break;
 				case 23: //select sd file
-					sdcard_selectfile(get_str(' '));
+                    strcpy(selectedFile, get_str(' '));
+                    printf("sdcard_selectfile: selected file %s\r\n", selectedFile);
+                    usb_printf("File selected: %s\r\n", selectedFile);
 					break;
 				case 24: //start/resume sd print
-					sdcard_replaystart();
+					usb_printf("File opened: %s \r\nok\r\n",selectedFile);
 					break;
 				case 25: //pause sd print
-					sdcard_replaypause();
+					printf("sdcard_replaypause\r\n");
 					break;
 				case 26: //set sd position
-					if (has_code('S'))
-						sdcard_setposition(get_uint('S'));
 					break;
 				case 27: //sd print status
-					sdcard_printstatus();
+					usb_printf("ok not printing\r\n");
 					return NO_REPLY;
 				case 28: //begin write to sd file
-					//sdcard_selectfile();
-					sdcard_capturestart(get_str(' '));
 					break;
 				case 29: //stop writing sd file
-					sdcard_capturestop();
 					break;
 				
 				case 44:
-					if (strcmp(get_str(' '),"IKnowWhatIAmDoing") == 0)
-					{
-						FLASH_BootFromROM();
-						sendReply("bootloader enabled\r\n")
-					}
-					else
-					{
-						FLASH_BootFromFLASH();
-					}
 					break;
 				case 82:
 					axis_relative_modes[3] = 0;
@@ -512,7 +490,7 @@ static int gcode_process_command()
                     
 					if (heater)
 					{
-                        const char* ok = (sdcard_isreplaying()) ? "" : "ok ";
+                        const char* ok = "ok ";
                         sendReply("%sT:%u @%u B:%u \r\n",ok,heater->akt_temp,heater->pwm,bed_heater.akt_temp);
 					}
 					return NO_REPLY;
@@ -609,7 +587,7 @@ static int gcode_process_command()
 					break;			  
 				case 115: // M115
                 {
-                    const char* ok = (sdcard_isreplaying()) ? "" : "ok ";
+                    const char* ok = "ok ";
 					sendReply("%sFIRMWARE_NAME: Sprinter 4pi PROTOCOL_VERSION:1.0 MACHINE_TYPE:Prusa EXTRUDER_COUNT:%d\r\n", ok, MAX_EXTRUDER);
 					return NO_REPLY;
                 }
@@ -854,19 +832,15 @@ static int gcode_process_command()
 					break;
 				}
 				case 500: // M500 - stores paramters in EEPROM
-					FLASH_StoreSettings();
 					break;
 				case 501: // M501 - reads parameters from EEPROM (if you need to reset them after you changed them temporarily).
-					FLASH_LoadSettings();
 					break;
 				case 502:	// M502 - reverts to the default "factory settings". You still need to store them in EEPROM afterwards if you want to.
 					init_parameters();
 					break;
 				case 503:	//M503 show settings
-					FLASH_PrintSettings();
 					break;
 				case 505:
-					FLASH_Store_to_SD();
 					break;
 				case 510: // M510 Axis invert
 					if(has_code('X'))
@@ -1062,10 +1036,6 @@ static int gcode_process_command()
 		}
 		case 'T':
 		{
-			if (sdcard_iscapturing()) {
-				sdcard_writeline(parserState.parsePos);
-				break;
-			}
 			int new_extruder = get_uint('T');
 			if (new_extruder >= MAX_EXTRUDER)
 			{
@@ -1136,8 +1106,7 @@ static void gcode_line_received()
 //		DEBUG("gcode line: '%s'\r\n",parserState.parsePos);
 		if (gcode_process_command() == SEND_REPLY)
 		{
-            if (sdcard_isreplaying() == false)
-                sendReply("ok\r\n");
+            sendReply("ok\r\n");
             
 			previous_millis_cmd = timestamp;
 		}
@@ -1192,52 +1161,6 @@ void gcode_update()
 		}
 		
 	}
-	if(parserState.commandLen == 0 && sdcard_isreplaying() && !sdcard_isreplaypaused()){
-		int newline=0;
-        unsigned char nchar=0;
-		while(!newline){
-			int x=sdcard_getchar(&nchar);
-			if(!x){
-				sendReply("Done printing file\r\n");
-				sdcard_replaystop();
-				newline=1;
-				break;
-			}
-//			printf("%c\r\n",nchar);
-		switch(nchar)
-		{
-			case '\0':
-				newline=1;
-				break;
-			case ';':
-			case '(':
-				parserState.comment_mode = true;
-				break;
-			case '\n':
-			case '\r':
-				parserState.commandBuffer[parserState.commandLen] = 0;
-				parserState.parsePos = parserState.commandBuffer;
-				gcode_line_received();
-				parserState.comment_mode = false;
-				parserState.commandLen = 0;
-				newline=1;
-				break;
-			default:
-				if (parserState.commandLen >= BUFFER_SIZE)
-				{
-					printf("error: command buffer full!\r\n");
-				}
-				else
-				{
-					if (!parserState.comment_mode)
-						parserState.commandBuffer[parserState.commandLen++] = nchar;
-				}
-				break;
-		}
-	
-		}
-	}
-	
 }
 
 

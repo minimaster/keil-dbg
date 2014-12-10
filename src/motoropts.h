@@ -19,14 +19,14 @@
 void motor_enaxis(unsigned char axis, unsigned char en);
 void motor_setdir(unsigned char axis, unsigned char dir);
 void motor_step(unsigned char axis);
-void motor_unstep();
+void motor_unstep(void);
 
 unsigned int count_ma(unsigned char count);
 unsigned char ma_count(unsigned int ma);
 unsigned char microstep_mode(unsigned char usteps);
 unsigned char microstep_usteps(unsigned char mode);
 void motor_setopts(unsigned char axis, unsigned char ustepbits, unsigned char current);
-void motor_setup();
+void motor_setup(void);
 
  
 

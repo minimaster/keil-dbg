@@ -136,7 +136,7 @@ void adc_sample(){
 
 
 
-void ADCC0_IrqHandler(void)
+void ADC12B_IRQHandler(void)
 {
     status = ADC12_GetStatus(AT91C_BASE_ADC);
     
@@ -201,7 +201,7 @@ void initadc(int autos)
 //	ADC12_EnableChannel(AT91C_BASE_ADC, ADC_NUM_6);
 //	ADC12_EnableChannel(AT91C_BASE_ADC, ADC_NUM_7);
 	
-	IRQ_ConfigureIT(AT91C_ID_ADC, ADCC0_IRQ_PRIORITY, ADCC0_IrqHandler);
+	IRQ_ConfigureIT(AT91C_ID_ADC, ADCC0_IRQ_PRIORITY, ADC12B_IRQHandler);
 	IRQ_EnableIT(AT91C_ID_ADC);
 	
 	ADC12_EnableIt(AT91C_BASE_ADC, 1<<ADC_NUM_1);

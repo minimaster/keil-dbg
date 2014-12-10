@@ -22,7 +22,7 @@
 typedef void (*ReplyFunction)(const char* format,...);
 
 void gcode_init(ReplyFunction replyFunc);
-void gcode_update();
+void gcode_update(void);
 
 int32_t get_int(char chr);
 uint32_t get_uint(char chr);

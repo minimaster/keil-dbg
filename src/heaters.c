@@ -101,7 +101,7 @@ void heater_switch(unsigned char heater, unsigned char en)
 {
 	Pin FETPINS[]={BEDHEAT,HOTEND1,HOTEND2,AUX1,AUX2};
 
-	if(heater<0||heater>5)
+	if(heater>5)
 		return;
 	
 	if(en)
@@ -117,7 +117,7 @@ void LED_switch(unsigned char led, unsigned char en)
 {
 	Pin LEDPINS[]={PIN_LED1,PIN_LED2,PIN_LED3,PIN_LED4,PIN_LED5,PIN_LED6,PIN_LED7,PIN_LED8,PIN_LED9};
 
-	if(led<0||led>9)
+	if(led>9)
 		return;
 	
 	if(en)
@@ -352,7 +352,7 @@ void init_heaters_values(void)
 //--------------------------------------------------
 volatile unsigned char g_TC1_pwm_cnt = 0;
 volatile unsigned char pwm_io_is_off[4] = {0,0,0,0};
-void TC1_IrqHandler(void)
+void TC1_IRQHandler(void)
 {
 
 	volatile unsigned int dummy;
@@ -556,7 +556,7 @@ void ConfigureTc_1(void)
 	AT91C_BASE_TC1->TC_RC = (BOARD_MCK / 128) / freq; // timerFreq / desiredFreq
 
 	// Configure and enable interrupt on RC compare
-	IRQ_ConfigureIT(AT91C_ID_TC1, 2, TC1_IrqHandler);
+	IRQ_ConfigureIT(AT91C_ID_TC1, 2, TC1_IRQHandler);
 	AT91C_BASE_TC1->TC_IER = AT91C_TC_CPCS;
 	IRQ_EnableIT(AT91C_ID_TC1);
 
